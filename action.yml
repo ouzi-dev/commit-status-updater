@@ -1,0 +1,15 @@
+name: 'commit-status-updater'
+description: 'Updates the current commit status'
+
+inputs:
+  context:  
+    description: 'The context for the status. Default is GithubActions - ${GITHUB_WORKFLOW}'
+  state:  
+    description: "Commit state. Possible values are 'pending', 'success', 'error' or 'failure'"
+    default: 'pending'
+  token:
+    description: "The Github token"
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
