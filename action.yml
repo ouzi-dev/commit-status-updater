@@ -1,5 +1,9 @@
 name: 'commit-status-updater'
 description: 'Updates the current commit status'
+author: 'Ouzi, ltd. Ouzi Team <team@ouzi.dev>'
+branding:
+  icon: 'check-circle'
+  color: 'purple'
 
 inputs:
   context:  
