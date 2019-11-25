@@ -5,15 +5,9 @@
 A simple Github Action that allows us to update the status of a given commit.
 
 GitHub does not update the status of a commit when running workflow and therefore tools that rely on the context/status of a given commit are not compatible with it.
-<<<<<<< HEAD
 
 ## Input Parameters
 
-=======
-
-## Input Parameters
-
->>>>>>> 85bdd958c28e5e42ebfdd25f2ceff8241f3d9c66
 * context: The context for the status
   * optional
   * default:  GithubActions - ${GITHUB_WORKFLOW}
@@ -35,11 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-<<<<<<< HEAD
     - uses: ouzi-dev/commit-status-updater@v0.1.0
-=======
-    - uses: ouzi-dev/commit-status-updater@v0.1
->>>>>>> 85bdd958c28e5e42ebfdd25f2ceff8241f3d9c66
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Test
@@ -48,21 +38,13 @@ jobs:
         sleep 2m
         echo pass
     - if: success()
-<<<<<<< HEAD
     - uses: ouzi-dev/commit-status-updater@v0.1.0
-=======
-    - uses: ouzi-dev/commit-status-updater@v0.1
->>>>>>> 85bdd958c28e5e42ebfdd25f2ceff8241f3d9c66
       with: 
         state: success
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - if: failure()
-<<<<<<< HEAD
     - uses: ouzi-dev/commit-status-updater@v0.1.0
-=======
-    - uses: ouzi-dev/commit-status-updater@v0.1
->>>>>>> 85bdd958c28e5e42ebfdd25f2ceff8241f3d9c66
       with: 
         state: failure
       env:

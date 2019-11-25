@@ -4,7 +4,6 @@ author: 'Ouzi, ltd. Ouzi Team <team@ouzi.dev>'
 branding:
   icon: 'check-circle'
   color: 'purple'
-
 inputs:
   context:  
     description: 'The context for the status. Default is GithubActions - ${GITHUB_WORKFLOW}'
