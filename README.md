@@ -62,10 +62,6 @@ Using this actions you can tell tide to not skip optional contexts and effective
 ```
 tide:
   context_options:
-<<<<<<< HEAD
     # Treat unknown contexts as required
     skip-unknown-contexts: false
-=======
-    from-branch-protection: true
->>>>>>> 85bdd958c28e5e42ebfdd25f2ceff8241f3d9c66
 ```
