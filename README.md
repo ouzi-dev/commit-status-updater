@@ -5,37 +5,17 @@
 A simple Github Action that allows us to update the status of a given commit.
 
 GitHub does not update the status of a commit when running workflow and therefore tools that rely on the context/status of a given commit are not compatible with it.
-An example is [Prow](https://github.com/kubernetes/test-infra/tree/master/prow) which uses the Github Status API to read the status of a given commit. 
 
-## Integration with Prow
+## Input Parameters
 
-If using [Prow](https://github.com/kubernetes/test-infra/tree/master/prow) you can now add GitHub Workflows as required checks.
-
-### Example with Branch Protection and Tide
-branch-protection:
-```
-branch-protection:
-  orgs:
-    {MY_ORG}:
-      repos:
-        {MY_REPO}:
-          branches:
-            master:
-              protect: true  # enable protection
-              enforce_admins: true  # rules apply to admins
-              required_status_checks:
-                contexts: 
-                  - "GithubActions - {WORKFLOW_NAME}"
-              restrictions: # restrict who can push to the repo
-                users:
-                - ouzibot
-```
-tide:
-```
-tide:
-  context_options:
-    from-branch-protection: true
-```
+* context: The context for the status
+  * optional
+  * default:  GithubActions - ${GITHUB_WORKFLOW}
+* state: Commit state. Possible values are 'pending', 'success', 'error' or 'failure'
+  * optional
+  * default:  pending
+* token: The Github token
+  * required
 
 ## Example action
 
@@ -49,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ouzi-dev/github-action-commit-status-updater@master
+    - uses: ouzi-dev/commit-status-updater@v0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Test
@@ -58,15 +38,29 @@ jobs:
         sleep 2m
         echo pass
     - if: success()
-    - uses: ouzi-dev/github-action-commit-status-updater@master
+    - uses: ouzi-dev/commit-status-updater@v0.1
       with: 
         state: success
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - if: failure()
-    - uses: ouzi-dev/github-action-commit-status-updater@master
+    - uses: ouzi-dev/commit-status-updater@v0.1
       with: 
         state: failure
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+
+## Integration with Prow
+
+An example is [Prow](https://github.com/kubernetes/test-infra/tree/master/prow) which uses the Github Status API to read the status of a given commit. 
+Using this actions you can tell tide to not skip optional contexts and effectively wait for a GitHub Workflow to pass before merging.
+
+### Example with Tide
+
+```
+tide:
+  context_options:
+    from-branch-protection: true
 ```
