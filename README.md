@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ouzi-dev/commit-status-updater@v0.1.0
+    - uses: ouzi-dev/commit-status-updater@v0.1.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Test
@@ -38,13 +38,13 @@ jobs:
         sleep 2m
         echo pass
     - if: success()
-    - uses: ouzi-dev/commit-status-updater@v0.1.0
+      uses: ouzi-dev/commit-status-updater@v0.1.1
       with: 
         state: success
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - if: failure()
-    - uses: ouzi-dev/commit-status-updater@v0.1.0
+      uses: ouzi-dev/commit-status-updater@v0.1.1
       with: 
         state: failure
       env:
