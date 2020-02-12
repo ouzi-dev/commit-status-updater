@@ -4617,14 +4617,14 @@ function getInputs(isPost) {
     else {
         result.status = paramsHelper.getStatusForJobStatus(status, isPost);
     }
-    result.url = core.getInput(URL_PARAM);
-    result.description = core.getInput(DESCRIPTION_PARAM);
+    result.url = core.getInput(URL_PARAM) || '';
+    result.description = core.getInput(DESCRIPTION_PARAM) || '';
     const ignoreForks = core.getInput(IGNORE_FORKS_PARAM);
     if (isEmptyString(ignoreForks)) {
         result.ignoreForks = true;
     }
     else {
-        result.ignoreForks = !(singleShot.toLowerCase() === 'false');
+        result.ignoreForks = !(ignoreForks.toLowerCase() === 'false');
     }
     const addHoldComment = core.getInput(ADD_HOLD_COMMENT_PARAM);
     if (isEmptyString(addHoldComment)) {
@@ -4633,8 +4633,8 @@ function getInputs(isPost) {
     else {
         result.addHoldComment = addHoldComment.toLowerCase() === 'true';
     }
-    result.startComment = core.getInput(START_COMMENT_PARAM);
-    result.endComment = core.getInput(END_COMMENT_PARAM);
+    result.startComment = core.getInput(START_COMMENT_PARAM) || '';
+    result.endComment = core.getInput(END_COMMENT_PARAM) || '';
     return result;
 }
 exports.getInputs = getInputs;

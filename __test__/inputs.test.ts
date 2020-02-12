@@ -1,5 +1,5 @@
 import * as assert from 'assert'
-import { IParams } from '../lib/paramsHelper'
+import {IParams} from '../lib/paramsHelper'
 
 // Late bind
 let inputsHelper: any
