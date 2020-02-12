@@ -14,11 +14,11 @@ GitHub does not update the status of a commit when running workflow and therefor
 * token: Auth token used to add status commits
   
   * required
-  * default: ${ github.token }
+  * default: "${ github.token }"
   
 * name: The Name of the status check to add to the commit
   * required
-  * default:  GithubActions - ${GITHUB_WORKFLOW}
+  * default: "GithubActions - ${GITHUB_WORKFLOW}"
   
 * status: Commit or job status, based on this the action will set the correct status in the commit: Accepted values are: `error`, `failure`, `pending`, `success` and `cancelled`.
 
@@ -31,7 +31,7 @@ GitHub does not update the status of a commit when running workflow and therefor
   If the passed status is `error` it will set status commit `error`.
 
   * required
-  * default: ${ job.status }
+  * default: "pending"
   
 * url: URL for the status check.
 
@@ -83,8 +83,23 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: ouzi-dev/commit-status-updater@v1.0.0
+```
+
+### Action sets commit to error status without comment
+
+```
+name: Test
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
-        status: "pending"
+        status: "error"
 ```
 
 ### Action sets commit to pending status with comment, and updates check and adds comment at the end of the workflow
@@ -101,12 +116,12 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
-        status: "pending"
         addHoldComment: "true"
     - if: always()
       uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
         addHoldComment: "true"
+        status: "${{ job.status }}"
 ```
 
 ### Action with custom hold comments
@@ -130,7 +145,7 @@ jobs:
         failComment: "action failed!"
 ```
  
-### Action no comments, set commit to "pending" status and set url, description and specific name
+### Action no comments, set commit to "error" status and set url, description and specific name
 
 ```
 name: Test
@@ -144,7 +159,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
-        status: "pending"
+        status: "error"
         url: http://myurl.io/
         description: "this is my status check"
         name: "name of my status check"
