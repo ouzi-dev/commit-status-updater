@@ -419,6 +419,7 @@ const inputsHelper = __importStar(__webpack_require__(379));
 const githubHelper = __importStar(__webpack_require__(959));
 const utils = __importStar(__webpack_require__(611));
 function run() {
+    core.info("run method!");
     try {
         utils.validateEventType();
         const params = inputsHelper.getInputs(false);
@@ -439,6 +440,7 @@ function run() {
 }
 exports.run = run;
 function post() {
+    core.info("post method!");
     try {
         utils.validateEventType();
         const params = inputsHelper.getInputs(true);
@@ -7499,11 +7501,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
 const coreCommand = __importStar(__webpack_require__(431));
 /**
  * Indicates whether the POST action is running.
  */
 exports.IsPost = !!process.env['STATE_isPost'];
+const bleh = process.env['STATE_isPost'];
+core.info(`bleh: ${bleh}`);
+core.info(`IsPost: ${exports.IsPost}`);
 // Publish a variable so that when the POST action runs, it can determine it should run the cleanup logic.
 // This is necessary since we don't have a separate entry point.
 if (!exports.IsPost) {

@@ -20,7 +20,7 @@ jobs:
         uses: ./
         with:
           addHoldComment: "true"
-      - if: failure()
+      - if: cancelled()
         uses: ./
         with:
           addHoldComment: "true"

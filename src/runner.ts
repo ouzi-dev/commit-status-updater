@@ -5,6 +5,7 @@ import * as utils from './utils'
 import {IParams} from './paramsHelper'
 
 export function run(): void {
+  core.info('run method!')
   try {
     utils.validateEventType()
 
@@ -27,6 +28,7 @@ export function run(): void {
 }
 
 export function post(): void {
+  core.info('post method!')
   try {
     utils.validateEventType()
 
