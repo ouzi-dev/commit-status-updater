@@ -1,18 +1,64 @@
 name: 'commit-status-updater'
-description: 'Updates the current commit status'
+description: 'A simple Github Action that allows us to update the status of the last commit in a pull request'
 author: 'Ouzi, ltd. Ouzi Team <team@ouzi.dev>'
 branding:
   icon: 'check-circle'
   color: 'purple'
 inputs:
-  context:  
-    description: 'The context for the status. Default is GithubActions - ${GITHUB_WORKFLOW}'
-  state:  
-    description: "Commit state. Possible values are 'pending', 'success', 'error' or 'failure'"
-    default: 'pending'
   token:
-    description: "The Github token"
-
+    description: >
+      Auth token used to add status commits.
+    default: "${{ github.token }}"
+    required: true
+  url:
+    description: >
+      URL for the status check.
+    default: ""
+  description:
+    description: >
+      Description for the status check.
+    default: ""
+  name:
+    description: >
+      The context for the status. Default is GithubActions - ${GITHUB_WORKFLOW}
+    default: "GithubActions - ${{ github.workflow }}"
+    required: true
+  status:
+    description: >
+      Commit or job status, based on this the action will set the correct status in the commit:
+      Accepted values are: 'error', 'failure', 'pending', 'success' and 'cancelled'.
+      By default it will use the current job status.
+      If the passed status is 'pending' it will set status commit 'pending'
+      If the passed status is 'failure' or 'cancelled' it wil set status commit 'failure'
+      If the passed status is 'success' it will set status commit 'success'
+      If the passed status is 'error' it will set status commit 'error'
+    default: "${{ job.status }}"
+    required: true
+  ignoreForks:
+    description: >
+      If the pull request is from a fork the action won't add a status by default.
+      This is because the action won't have a token with permissions to add the status
+      to the commit. You can disable this, but then you'll have to provide a token
+      with enough permissions to add status to the commits in the forks!
+    default: "true"
+    required: true
+  addHoldComment:
+    description: >
+      If true the action will add a comment to the pull request. This is useful if you use prow and you get PRs from forks,
+      you can use `/hold` and `/hold cancel` instead of the status check since the token won't have permissions to do that.
+    default: "false"
+  pendingComment:
+    description: >
+      This is the message to add to the pull request when the status is pending.
+    default: "/hold"
+  successComment:
+    description: >
+      This is the message to add to the pull request when the status is success.
+    default: "/hold cancel"
+  failComment:
+    description: >
+      This is the message to add to the pull request when the status is 'failure', 'error' or 'cancelled'.
+    default: "/hold"
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: node12
+  main: dist/index.js
