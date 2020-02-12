@@ -11,7 +11,7 @@ jobs:
         with:
           addHoldComment: "true"
       - run: npm ci
-      - run: npm run build
+      - run: npma run build
       - run: npm run format-check
       - run: npm run lint
       - run: npm run pack

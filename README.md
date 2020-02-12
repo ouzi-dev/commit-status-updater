@@ -62,7 +62,9 @@ GitHub does not update the status of a commit when running workflow and therefor
   * optional
   * default: "/hold cancel"
 
-## Example action with post and default values
+## Examples 
+
+### Action with post and default values
 
 ```
 name: Test
@@ -75,6 +77,64 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: ouzi-dev/commit-status-updater@v1.0.0
+```
+
+### Action with post and custom hold comments
+
+```
+name: Test
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ouzi-dev/commit-status-updater@v1.0.0
+      with:
+        addHoldComment: "true"
+        startComment: "action started!"
+        endComment: "action ended!"
+```
+
+### Action with no post, no comments, set commit to "pending" status and set url, description and specific name
+
+```
+name: Test
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ouzi-dev/commit-status-updater@v1.0.0
+      with:
+        singleShot: "true"
+        status: "pending"
+        url: http://myurl.io/
+        description: "this is my status check"
+        name: "name of my status check"
+```
+
+### Action with specific token and setting status check in commits in forks
+
+```
+name: Test
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ouzi-dev/commit-status-updater@v1.0.0
+      with:
+        token: "my_custom_token"
+        ignoreForks: "false"
 ```
 
 ## Integration with Prow
