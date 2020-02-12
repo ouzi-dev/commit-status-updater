@@ -1,0 +1,18 @@
+name: PR Build and test
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          addHoldComment: "true"
+      - run: npm ci
+      - run: npm run build
+      - run: npm run format-check
+      - run: npm run lint
+      - run: npm run pack
+      - run: npm test

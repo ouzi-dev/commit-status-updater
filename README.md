@@ -1,6 +1,7 @@
 # Github Action commit-status-updater
 
-![](https://github.com/ouzi-dev/commit-status-updater/workflows/Build%20and%20Test/badge.svg)
+![](https://github.com/ouzi-dev/commit-status-updater/workflows/Build%20and%20test/badge.svg)
+![](https://github.com/ouzi-dev/commit-status-updater/workflows/PR%20Build%20and%20Test/badge.svg)
 
 ## Overview
 
