@@ -12,7 +12,6 @@ export interface IParams {
   description: string
   name: string
   status: Status
-  singleShot: boolean
   ignoreForks: boolean
   addHoldComment: boolean
   pendingComment: string
@@ -35,7 +34,7 @@ export function getMessageForStatus(status: Status, params: IParams): string {
   }
 }
 
-export function getStatusForSingleShot(str: string): Status {
+export function getStatus(str: string): Status {
   const toLower = str.toLowerCase()
   switch (toLower) {
     case ERROR: {
@@ -55,28 +54,6 @@ export function getStatusForSingleShot(str: string): Status {
     }
     default: {
       throw new TypeError(`unknown commit or job status: ${str}`)
-    }
-  }
-}
-
-export function getStatusForJobStatus(str: string, isPost: boolean): Status {
-  const toLower = str.toLowerCase()
-  switch (toLower) {
-    case SUCCESS: {
-      if (isPost) {
-        return SUCCESS
-      } else {
-        return PENDING
-      }
-    }
-    case FAILURE: {
-      return FAILURE
-    }
-    case CANCELLED: {
-      return FAILURE
-    }
-    default: {
-      throw new TypeError(`unknown job status: ${str}`)
     }
   }
 }

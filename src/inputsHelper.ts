@@ -1,7 +1,6 @@
 import * as core from '@actions/core'
 import * as paramsHelper from './paramsHelper'
 
-const SINGLE_SHOT_PARAM = 'singleShot'
 const STATUS_PARAM = 'status'
 const TOKEN_PARAM = 'token'
 const URL_PARAM = 'url'
@@ -23,7 +22,7 @@ function validateString(str: string, paramName: string): void {
   }
 }
 
-export function getInputs(isPost: boolean): paramsHelper.IParams {
+export function getInputs(): paramsHelper.IParams {
   const result = ({} as unknown) as paramsHelper.IParams
 
   result.token = core.getInput(TOKEN_PARAM)
@@ -34,23 +33,11 @@ export function getInputs(isPost: boolean): paramsHelper.IParams {
 
   validateString(result.name, NAME_PARAM)
 
-  const singleShot = core.getInput(SINGLE_SHOT_PARAM)
-
-  if (isEmptyString(singleShot)) {
-    result.singleShot = false
-  } else {
-    result.singleShot = singleShot.toLowerCase() === 'true'
-  }
-
   const status = core.getInput(STATUS_PARAM)
 
   validateString(status, STATUS_PARAM)
 
-  if (result.singleShot) {
-    result.status = paramsHelper.getStatusForSingleShot(status)
-  } else {
-    result.status = paramsHelper.getStatusForJobStatus(status, isPost)
-  }
+  result.status = paramsHelper.getStatus(status)
 
   result.url = core.getInput(URL_PARAM) || ''
   result.description = core.getInput(DESCRIPTION_PARAM) || ''

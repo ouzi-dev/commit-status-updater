@@ -421,7 +421,7 @@ const utils = __importStar(__webpack_require__(611));
 function run() {
     try {
         utils.validateEventType();
-        const params = inputsHelper.getInputs(false);
+        const params = inputsHelper.getInputs();
         const ghHelper = githubHelper.CreateGithubHelper(params.token);
         if (params.ignoreForks && ghHelper.isFork()) {
             core.info('ignoring PR from fork...');
@@ -438,30 +438,6 @@ function run() {
     }
 }
 exports.run = run;
-function post() {
-    try {
-        utils.validateEventType();
-        const params = inputsHelper.getInputs(true);
-        const ghHelper = githubHelper.CreateGithubHelper(params.token);
-        if (params.singleShot) {
-            core.info('singleShot enabled, nothing to do in post');
-            return;
-        }
-        if (params.ignoreForks && ghHelper.isFork()) {
-            core.info('ignoring PR from fork...');
-        }
-        else {
-            ghHelper.setStatus(params);
-        }
-        if (params.addHoldComment) {
-            ghHelper.addComment(params.selectedComment);
-        }
-    }
-    catch (error) {
-        core.setFailed(error.message);
-    }
-}
-exports.post = post;
 
 
 /***/ }),
@@ -2061,14 +2037,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const state = __importStar(__webpack_require__(496));
 const runner = __importStar(__webpack_require__(39));
-if (!state.IsPost) {
-    runner.run();
-}
-else {
-    runner.post();
-}
+runner.run();
 
 
 /***/ }),
@@ -4578,7 +4548,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const paramsHelper = __importStar(__webpack_require__(957));
-const SINGLE_SHOT_PARAM = 'singleShot';
 const STATUS_PARAM = 'status';
 const TOKEN_PARAM = 'token';
 const URL_PARAM = 'url';
@@ -4597,27 +4566,15 @@ function validateString(str, paramName) {
         throw new TypeError(`${paramName} can't be an empty string`);
     }
 }
-function getInputs(isPost) {
+function getInputs() {
     const result = {};
     result.token = core.getInput(TOKEN_PARAM);
     validateString(result.token, TOKEN_PARAM);
     result.name = core.getInput(NAME_PARAM);
     validateString(result.name, NAME_PARAM);
-    const singleShot = core.getInput(SINGLE_SHOT_PARAM);
-    if (isEmptyString(singleShot)) {
-        result.singleShot = false;
-    }
-    else {
-        result.singleShot = singleShot.toLowerCase() === 'true';
-    }
     const status = core.getInput(STATUS_PARAM);
     validateString(status, STATUS_PARAM);
-    if (result.singleShot) {
-        result.status = paramsHelper.getStatusForSingleShot(status);
-    }
-    else {
-        result.status = paramsHelper.getStatusForJobStatus(status, isPost);
-    }
+    result.status = paramsHelper.getStatus(status);
     result.url = core.getInput(URL_PARAM) || '';
     result.description = core.getInput(DESCRIPTION_PARAM) || '';
     const ignoreForks = core.getInput(IGNORE_FORKS_PARAM);
@@ -7486,33 +7443,6 @@ function resolveCommand(parsed) {
 }
 
 module.exports = resolveCommand;
-
-
-/***/ }),
-
-/***/ 496:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const coreCommand = __importStar(__webpack_require__(431));
-/**
- * Indicates whether the POST action is running.
- */
-exports.IsPost = !!process.env['STATE_isPost'];
-// Publish a variable so that when the POST action runs, it can determine it should run the cleanup logic.
-// This is necessary since we don't have a separate entry point.
-if (!exports.IsPost) {
-    coreCommand.issueCommand('save-state', { name: 'isPost' }, 'true');
-}
 
 
 /***/ }),
@@ -12117,7 +12047,7 @@ function getMessageForStatus(status, params) {
     }
 }
 exports.getMessageForStatus = getMessageForStatus;
-function getStatusForSingleShot(str) {
+function getStatus(str) {
     const toLower = str.toLowerCase();
     switch (toLower) {
         case ERROR: {
@@ -12140,30 +12070,7 @@ function getStatusForSingleShot(str) {
         }
     }
 }
-exports.getStatusForSingleShot = getStatusForSingleShot;
-function getStatusForJobStatus(str, isPost) {
-    const toLower = str.toLowerCase();
-    switch (toLower) {
-        case SUCCESS: {
-            if (isPost) {
-                return SUCCESS;
-            }
-            else {
-                return PENDING;
-            }
-        }
-        case FAILURE: {
-            return FAILURE;
-        }
-        case CANCELLED: {
-            return FAILURE;
-        }
-        default: {
-            throw new TypeError(`unknown job status: ${str}`);
-        }
-    }
-}
-exports.getStatusForJobStatus = getStatusForJobStatus;
+exports.getStatus = getStatus;
 
 
 /***/ }),
