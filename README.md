@@ -126,7 +126,7 @@ jobs:
         successComment: "action success!"
         failComment: "action failed!"
 ```
-
+ 
 ### Action with no post, no comments, set commit to "pending" status and set url, description and specific name
 
 ```
