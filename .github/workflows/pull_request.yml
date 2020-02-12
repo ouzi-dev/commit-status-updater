@@ -13,7 +13,7 @@ jobs:
           addHoldComment: "true"
           status: "pending"
       - run: npm ci
-      - run: npma run build
+      - run: npm run build
       - run: npm run format-check
       - run: npm run lint
       - run: npm run pack
