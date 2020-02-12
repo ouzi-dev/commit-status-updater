@@ -79,6 +79,31 @@ jobs:
     - uses: ouzi-dev/commit-status-updater@v1.0.0
 ```
 
+### Action with post and default values, and set status if error or cancel
+
+```
+name: Test
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ouzi-dev/commit-status-updater@v1.0.0
+    - if: failure()
+      uses: ouzi-dev/commit-status-updater@v1.0.0
+      with:
+        singleShot: "true"
+        status: "error"
+    - if: cancelled()
+      uses: ouzi-dev/commit-status-updater@v1.0.0
+      with:
+        singleShot: "true"
+        status: "error"
+```
+
 ### Action with post and custom hold comments
 
 ```

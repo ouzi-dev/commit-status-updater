@@ -16,11 +16,15 @@ jobs:
       - run: npm run lint
       - run: npm run pack
       - run: npm test
+      # If something fails I want to set the status commit to "error" without adding anymore comments
+      # I'm happy to leave the PR with `/hold` if there is an error
       - if: failure()
         uses: ./
         with:
-          addHoldComment: "true"
+          singleShot: "true"
+          status: "error"
       - if: cancelled()
         uses: ./
         with:
-          addHoldComment: "true"
+          singleShot: "true"
+          status: "error"
