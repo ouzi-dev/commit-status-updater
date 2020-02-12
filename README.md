@@ -1,5 +1,7 @@
 # Github Action commit-status-updater
 
+![](https://github.com/ouzi-dev/commit-status-updater/workflows/Build%20and%20Test/badge.svg)
+
 ## Overview
 
 A simple Github Action that allows us to update the status of the last commit in a pull request.
