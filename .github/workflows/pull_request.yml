@@ -11,6 +11,7 @@ jobs:
         with:
           singleShot: "true"
           addHoldComment: "true"
+          status: "pending"
       - run: npm ci
       - run: npma run build
       - run: npm run format-check
