@@ -77,7 +77,7 @@ describe('inputsHelper tests', () => {
     inputs.singleShot = 'true'
     assert.throws(() => {
       inputsHelper.getInputs(false)
-    }, /TypeError: unknown commit status: bleh/)
+    }, /TypeError: unknown commit or job status: bleh/)
   })
 
   it('sets correct default values', () => {
@@ -91,8 +91,10 @@ describe('inputsHelper tests', () => {
     expect(params.url).toBe('')
     expect(params.description).toBe('')
     expect(params.status).toBe('pending')
-    expect(params.startComment).toBe('')
-    expect(params.endComment).toBe('')
+    expect(params.pendingComment).toBe('')
+    expect(params.successComment).toBe('')
+    expect(params.failComment).toBe('')
+    expect(params.selectedComment).toBe('')
     expect(params.addHoldComment).toBeFalsy()
     expect(params.singleShot).toBeFalsy()
     expect(params.ignoreForks).toBeTruthy()
@@ -108,8 +110,9 @@ describe('inputsHelper tests', () => {
     inputs.name = 'my_name'
     inputs.ignoreForks = 'true'
     inputs.addHoldComment = 'false'
-    inputs.startComment = '/hold'
-    inputs.endComment = '/hold cancel'
+    inputs.pendingComment = '/hold'
+    inputs.successComment = '/hold cancel'
+    inputs.failComment = '/hold fail'
 
     const params: IParams = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
@@ -118,8 +121,10 @@ describe('inputsHelper tests', () => {
     expect(params.description).toBe('my_description')
     expect(params.name).toBe('my_name')
     expect(params.status).toBe('pending')
-    expect(params.startComment).toBe('/hold')
-    expect(params.endComment).toBe('/hold cancel')
+    expect(params.pendingComment).toBe('/hold')
+    expect(params.successComment).toBe('/hold cancel')
+    expect(params.failComment).toBe('/hold fail')
+    expect(params.selectedComment).toBe('/hold')
     expect(params.addHoldComment).toBeFalsy()
     expect(params.singleShot).toBeFalsy()
     expect(params.ignoreForks).toBeTruthy()
@@ -135,8 +140,9 @@ describe('inputsHelper tests', () => {
     inputs.name = 'my_name'
     inputs.ignoreForks = 'false'
     inputs.addHoldComment = 'true'
-    inputs.startComment = '/hold'
-    inputs.endComment = '/hold cancel'
+    inputs.pendingComment = '/hold'
+    inputs.successComment = '/hold cancel'
+    inputs.failComment = '/hold fail'
 
     const params: IParams = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
@@ -145,8 +151,10 @@ describe('inputsHelper tests', () => {
     expect(params.description).toBe('')
     expect(params.name).toBe('my_name')
     expect(params.status).toBe('success')
-    expect(params.startComment).toBe('/hold')
-    expect(params.endComment).toBe('/hold cancel')
+    expect(params.pendingComment).toBe('/hold')
+    expect(params.successComment).toBe('/hold cancel')
+    expect(params.failComment).toBe('/hold fail')
+    expect(params.selectedComment).toBe('/hold cancel')
     expect(params.addHoldComment).toBeTruthy()
     expect(params.singleShot).toBeFalsy()
     expect(params.ignoreForks).toBeFalsy()
@@ -162,17 +170,20 @@ describe('inputsHelper tests', () => {
     inputs.status = 'Success'
     inputs.ignoreForks = 'true'
     inputs.addHoldComment = 'false'
-    inputs.startComment = '/hold'
-    inputs.endComment = '/hold cancel'
+    inputs.pendingComment = '/hold'
+    inputs.successComment = '/hold cancel'
+    inputs.failComment = '/hold fail'
 
     let params: IParams = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
     expect(params.status).toBe('success')
+    expect(params.selectedComment).toBe('/hold cancel')
 
     isPost = false
     params = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
     expect(params.status).toBe('pending')
+    expect(params.selectedComment).toBe('/hold')
 
     inputs.status = 'failure'
     params = inputsHelper.getInputs(isPost)
@@ -183,20 +194,23 @@ describe('inputsHelper tests', () => {
     params = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
     expect(params.status).toBe('failure')
+    expect(params.selectedComment).toBe('/hold fail')
 
     isPost = true
     inputs.status = 'failure'
     params = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
     expect(params.status).toBe('failure')
+    expect(params.selectedComment).toBe('/hold fail')
 
     inputs.status = 'cancelled'
     params = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
     expect(params.status).toBe('failure')
+    expect(params.selectedComment).toBe('/hold fail')
   })
 
-  it('sets correct status for singleShot and valid commit status', () => {
+  it('sets correct status for singleShot and valid status', () => {
     const isPost = false
     inputs.singleShot = 'true'
     inputs.token = 'my_token'
@@ -206,26 +220,37 @@ describe('inputsHelper tests', () => {
     inputs.status = 'Success'
     inputs.ignoreForks = 'true'
     inputs.addHoldComment = 'false'
-    inputs.startComment = '/hold'
-    inputs.endComment = '/hold cancel'
+    inputs.pendingComment = '/hold'
+    inputs.successComment = '/hold cancel'
+    inputs.failComment = '/hold fail'
 
     let params: IParams = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
     expect(params.status).toBe('success')
+    expect(params.selectedComment).toBe('/hold cancel')
 
     inputs.status = 'error'
     params = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
     expect(params.status).toBe('error')
+    expect(params.selectedComment).toBe('/hold fail')
 
     inputs.status = 'pending'
     params = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
     expect(params.status).toBe('pending')
+    expect(params.selectedComment).toBe('/hold')
 
     inputs.status = 'failure'
     params = inputsHelper.getInputs(isPost)
     expect(params).toBeTruthy()
     expect(params.status).toBe('failure')
+    expect(params.selectedComment).toBe('/hold fail')
+
+    inputs.status = 'cancelled'
+    params = inputsHelper.getInputs(isPost)
+    expect(params).toBeTruthy()
+    expect(params.status).toBe('failure')
+    expect(params.selectedComment).toBe('/hold fail')
   })
 })

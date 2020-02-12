@@ -19,7 +19,7 @@ export function run(): void {
     }
 
     if (params.addHoldComment) {
-      ghHelper.addComment(params.startComment)
+      ghHelper.addComment(params.selectedComment)
     }
   } catch (error) {
     core.setFailed(error.message)
@@ -46,7 +46,7 @@ export function post(): void {
     }
 
     if (params.addHoldComment) {
-      ghHelper.addComment(params.endComment)
+      ghHelper.addComment(params.selectedComment)
     }
   } catch (error) {
     core.setFailed(error.message)

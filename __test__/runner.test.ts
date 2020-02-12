@@ -40,7 +40,7 @@ describe('runner tests', () => {
     params.token = 'bleh'
     params.ignoreForks = true
     params.addHoldComment = true
-    params.startComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(false)
@@ -55,7 +55,7 @@ describe('runner tests', () => {
     params.token = 'bleh'
     params.ignoreForks = true
     params.addHoldComment = false
-    params.startComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(false)
@@ -70,7 +70,7 @@ describe('runner tests', () => {
     params.token = 'bleh'
     params.ignoreForks = true
     params.addHoldComment = false
-    params.startComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(true)
@@ -85,7 +85,7 @@ describe('runner tests', () => {
     params.token = 'bleh'
     params.ignoreForks = false
     params.addHoldComment = true
-    params.startComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     runner.run()
@@ -100,7 +100,7 @@ describe('runner tests', () => {
     params.ignoreForks = true
     params.singleShot = true
     params.addHoldComment = true
-    params.endComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(false)
@@ -116,7 +116,7 @@ describe('runner tests', () => {
     params.ignoreForks = true
     params.singleShot = false
     params.addHoldComment = true
-    params.endComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(false)
@@ -132,7 +132,7 @@ describe('runner tests', () => {
     params.ignoreForks = true
     params.singleShot = false
     params.addHoldComment = false
-    params.endComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(false)
@@ -148,7 +148,7 @@ describe('runner tests', () => {
     params.ignoreForks = true
     params.singleShot = false
     params.addHoldComment = false
-    params.endComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(true)
@@ -164,7 +164,7 @@ describe('runner tests', () => {
     params.ignoreForks = true
     params.singleShot = false
     params.addHoldComment = true
-    params.endComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(true)
@@ -180,7 +180,7 @@ describe('runner tests', () => {
     params.ignoreForks = false
     params.singleShot = false
     params.addHoldComment = false
-    params.endComment = 'my comment'
+    params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     runner.post()

@@ -52,16 +52,21 @@ GitHub does not update the status of a commit when running workflow and therefor
   * optional
   * default: "false"
 
-* startComment: This is the message to add to the pull request when the action runs.
+* pendingComment: This is the message to add to the pull request when the action is configured with singleShot and the provided status is pending, or if it's not singleShot, the provided status is success and is not post action.
 
   * optional
   * default: "/hold"
 
-* endComment: his is the message to add to the pull request in the action post step.
+* successComment: This is the message to add to the pull request when the provided status is success, singleShot is false and is post action, or if the provided status is success and singleShot is true.
 
   * optional
   * default: "/hold cancel"
 
+* failComment: This is the message to add to the pull request when the status is failure or error.
+
+  * optional
+  * default: "/hold cancel"
+  
 ## Examples 
 
 ### Action with post and default values
@@ -79,7 +84,7 @@ jobs:
     - uses: ouzi-dev/commit-status-updater@v1.0.0
 ```
 
-### Action with post and default values, and set status if error or cancel
+### Action with no post, default values, add comments and set status if error or cancel
 
 ```
 name: Test
@@ -92,16 +97,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: ouzi-dev/commit-status-updater@v1.0.0
-    - if: failure()
+      with:
+        singleShot: "true"
+        addHoldComment: "true"
+    - if: always()
       uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
         singleShot: "true"
-        status: "error"
-    - if: cancelled()
-      uses: ouzi-dev/commit-status-updater@v1.0.0
-      with:
-        singleShot: "true"
-        status: "error"
+        addHoldComment: "true"
 ```
 
 ### Action with post and custom hold comments
@@ -119,8 +122,9 @@ jobs:
     - uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
         addHoldComment: "true"
-        startComment: "action started!"
-        endComment: "action ended!"
+        pendingComment: "action pending!"
+        successComment: "action success!"
+        failComment: "action failed!"
 ```
 
 ### Action with no post, no comments, set commit to "pending" status and set url, description and specific name

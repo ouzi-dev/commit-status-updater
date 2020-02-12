@@ -9,8 +9,9 @@ const DESCRIPTION_PARAM = 'description'
 const NAME_PARAM = 'name'
 const IGNORE_FORKS_PARAM = 'ignoreForks'
 const ADD_HOLD_COMMENT_PARAM = 'addHoldComment'
-const START_COMMENT_PARAM = 'startComment'
-const END_COMMENT_PARAM = 'endComment'
+const PENDING_COMMENT_PARAM = 'pendingComment'
+const SUCCESS_COMMENT_PARAM = 'successComment'
+const FAIL_COMMENT_PARAM = 'failComment'
 
 function isEmptyString(str: string): boolean {
   return !str || str.length === 0
@@ -46,7 +47,7 @@ export function getInputs(isPost: boolean): paramsHelper.IParams {
   validateString(status, STATUS_PARAM)
 
   if (result.singleShot) {
-    result.status = paramsHelper.getStatusForCommitStatus(status)
+    result.status = paramsHelper.getStatusForSingleShot(status)
   } else {
     result.status = paramsHelper.getStatusForJobStatus(status, isPost)
   }
@@ -70,8 +71,15 @@ export function getInputs(isPost: boolean): paramsHelper.IParams {
     result.addHoldComment = addHoldComment.toLowerCase() === 'true'
   }
 
-  result.startComment = core.getInput(START_COMMENT_PARAM) || ''
-  result.endComment = core.getInput(END_COMMENT_PARAM) || ''
+  result.pendingComment = core.getInput(PENDING_COMMENT_PARAM) || ''
+  result.successComment = core.getInput(SUCCESS_COMMENT_PARAM) || ''
+  result.failComment = core.getInput(FAIL_COMMENT_PARAM) || ''
+
+  const selectedComment = paramsHelper.getMessageForStatus(
+    result.status,
+    result
+  )
+  result.selectedComment = selectedComment
 
   return result
 }

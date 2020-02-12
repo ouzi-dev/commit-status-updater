@@ -430,7 +430,7 @@ function run() {
             ghHelper.setStatus(params);
         }
         if (params.addHoldComment) {
-            ghHelper.addComment(params.startComment);
+            ghHelper.addComment(params.selectedComment);
         }
     }
     catch (error) {
@@ -454,7 +454,7 @@ function post() {
             ghHelper.setStatus(params);
         }
         if (params.addHoldComment) {
-            ghHelper.addComment(params.endComment);
+            ghHelper.addComment(params.selectedComment);
         }
     }
     catch (error) {
@@ -4586,8 +4586,9 @@ const DESCRIPTION_PARAM = 'description';
 const NAME_PARAM = 'name';
 const IGNORE_FORKS_PARAM = 'ignoreForks';
 const ADD_HOLD_COMMENT_PARAM = 'addHoldComment';
-const START_COMMENT_PARAM = 'startComment';
-const END_COMMENT_PARAM = 'endComment';
+const PENDING_COMMENT_PARAM = 'pendingComment';
+const SUCCESS_COMMENT_PARAM = 'successComment';
+const FAIL_COMMENT_PARAM = 'failComment';
 function isEmptyString(str) {
     return !str || str.length === 0;
 }
@@ -4612,7 +4613,7 @@ function getInputs(isPost) {
     const status = core.getInput(STATUS_PARAM);
     validateString(status, STATUS_PARAM);
     if (result.singleShot) {
-        result.status = paramsHelper.getStatusForCommitStatus(status);
+        result.status = paramsHelper.getStatusForSingleShot(status);
     }
     else {
         result.status = paramsHelper.getStatusForJobStatus(status, isPost);
@@ -4633,8 +4634,11 @@ function getInputs(isPost) {
     else {
         result.addHoldComment = addHoldComment.toLowerCase() === 'true';
     }
-    result.startComment = core.getInput(START_COMMENT_PARAM) || '';
-    result.endComment = core.getInput(END_COMMENT_PARAM) || '';
+    result.pendingComment = core.getInput(PENDING_COMMENT_PARAM) || '';
+    result.successComment = core.getInput(SUCCESS_COMMENT_PARAM) || '';
+    result.failComment = core.getInput(FAIL_COMMENT_PARAM) || '';
+    const selectedComment = paramsHelper.getMessageForStatus(result.status, result);
+    result.selectedComment = selectedComment;
     return result;
 }
 exports.getInputs = getInputs;
@@ -12099,7 +12103,21 @@ const ERROR = 'error';
 const FAILURE = 'failure';
 const PENDING = 'pending';
 const CANCELLED = 'cancelled';
-function getStatusForCommitStatus(str) {
+function getMessageForStatus(status, params) {
+    switch (status) {
+        case PENDING: {
+            return params.pendingComment;
+        }
+        case SUCCESS: {
+            return params.successComment;
+        }
+        default: {
+            return params.failComment;
+        }
+    }
+}
+exports.getMessageForStatus = getMessageForStatus;
+function getStatusForSingleShot(str) {
     const toLower = str.toLowerCase();
     switch (toLower) {
         case ERROR: {
@@ -12114,12 +12132,15 @@ function getStatusForCommitStatus(str) {
         case SUCCESS: {
             return SUCCESS;
         }
+        case CANCELLED: {
+            return FAILURE;
+        }
         default: {
-            throw new TypeError(`unknown commit status: ${str}`);
+            throw new TypeError(`unknown commit or job status: ${str}`);
         }
     }
 }
-exports.getStatusForCommitStatus = getStatusForCommitStatus;
+exports.getStatusForSingleShot = getStatusForSingleShot;
 function getStatusForJobStatus(str, isPost) {
     const toLower = str.toLowerCase();
     switch (toLower) {

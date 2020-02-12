@@ -9,6 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./
         with:
+          singleShot: "true"
           addHoldComment: "true"
       - run: npm ci
       - run: npma run build
@@ -18,13 +19,8 @@ jobs:
       - run: npm test
       # If something fails I want to set the status commit to "error" without adding anymore comments
       # I'm happy to leave the PR with `/hold` if there is an error
-      - if: failure()
+      - if: always()
         uses: ./
         with:
           singleShot: "true"
-          status: "error"
-      - if: cancelled()
-        uses: ./
-        with:
-          singleShot: "true"
-          status: "error"
+          addHoldComment: "true"
