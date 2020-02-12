@@ -22,5 +22,5 @@ jobs:
           addHoldComment: "true"
       - if: failure()
         uses: ./
-          with:
-            addHoldComment: "true"
+        with:
+          addHoldComment: "true"
