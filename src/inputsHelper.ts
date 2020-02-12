@@ -79,6 +79,7 @@ export function getInputs(isPost: boolean): paramsHelper.IParams {
     result.status,
     result
   )
+
   result.selectedComment = selectedComment
 
   return result

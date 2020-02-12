@@ -56,15 +56,18 @@ inputs:
       Warning: Be careful using this with `singleShot = true`, since you won't add a
       message at the end!
     default: "false"
-    required: true
-  startComment:
+  pendingComment:
     description: >
-      This is the message to add to the pull request when the action runs.
+      This is the message to add to the pull request when the status is pending.
     default: "/hold"
-  endComment:
+  successComment:
     description: >
-      This is the message to add to the pull request in the action post step.
+      This is the message to add to the pull request when the status is success.
     default: "/hold cancel"
+  failComment:
+    description: >
+      This is the message to add to the pull request when the status is failure.
+    default: "/hold"
 runs:
   using: node12
   main: dist/index.js
