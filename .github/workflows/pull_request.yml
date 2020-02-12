@@ -13,7 +13,7 @@ jobs:
           status: "pending"
       - run: npm ci
       - run: npm run build
-      - run: npma run format-check
+      - run: npm run format-check
       - run: npm run lint
       - run: npm run pack
       - run: npm test
