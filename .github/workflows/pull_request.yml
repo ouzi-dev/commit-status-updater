@@ -16,3 +16,11 @@ jobs:
       - run: npm run lint
       - run: npm run pack
       - run: npm test
+      - if: failure()
+        uses: ./
+        with:
+          addHoldComment: "true"
+      - if: failure()
+        uses: ./
+          with:
+            addHoldComment: "true"
