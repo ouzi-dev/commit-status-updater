@@ -20,18 +20,19 @@ GitHub does not update the status of a commit when running workflow and therefor
   * required
   * default:  GithubActions - ${GITHUB_WORKFLOW}
   
-* status: If `singleShot` is set to `true` this has to be a valid commit status. Valid commit status are: `error`, `failure`, `pending` and `success`.
+* status: Commit or job status, based on this the action will set the correct status in the commit: Accepted values are: `error`, `failure`, `pending`, `success` and `cancelled`.
 
-  If `singleShot` is set to `false` this has to be a valid job status. Valid job status are: `success`, `failure` and `cancelled`.
+  If the passed status is `pending` it wil set status commit `pending`.
+
+  If the passed status is `failure` or `cancelled` it will set status commit `failure`.
+
+  If the passed status is `success` it will set status commit `success`.
+
+  If the passed status is `error` it will set status commit `error`.
+
   * required
   * default: ${ job.status }
   
-* singleShot: If "true" the action won't run the post step and the action will expect a valid commit status in the input "status".
-  
-  If "false" the action expects a valid job status and will run the post step.
-  * optional
-  * default: "false"
-
 * url: URL for the status check.
 
   * optional
@@ -47,44 +48,29 @@ GitHub does not update the status of a commit when running workflow and therefor
   * optional
   * default: "true" 
 
-* addHoldComment: If true the action will add a comment at the beginning and at the end. This is useful if you use prow and you get PRs from forks, you can use `/hold` and `/hold cancel` instead of the status check since the token won't have permissions to do that. Warning: Be careful using this with `singleShot = true`, since you won't add a message at the end!
+* addHoldComment: If true the action will add a comment to the pull request. This is useful if you use prow and you get PRs from forks, you can use `/hold` and `/hold cancel` instead of the status check since the token won't have permissions to do that.
 
   * optional
   * default: "false"
 
-* pendingComment: This is the message to add to the pull request when the action is configured with singleShot and the provided status is pending, or if it's not singleShot, the provided status is success and is not post action.
+* pendingComment: This is the message to add to the pull request when the status is `pending`.
 
   * optional
   * default: "/hold"
 
-* successComment: This is the message to add to the pull request when the provided status is success, singleShot is false and is post action, or if the provided status is success and singleShot is true.
+* successComment: This is the message to add to the pull request when the status is `success`.
 
   * optional
   * default: "/hold cancel"
 
-* failComment: This is the message to add to the pull request when the status is failure or error.
+* failComment: This is the message to add to the pull request when the status is `failure`, `error` or `cancelled`.
 
   * optional
-  * default: "/hold cancel"
+  * default: "/hold"
   
 ## Examples 
 
-### Action with post and default values
-
-```
-name: Test
-
-on: [pull_request]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.0.0
-```
-
-### Action with no post, default values, add comments and set status if error or cancel
+### Action sets commit to pending status without comment
 
 ```
 name: Test
@@ -98,16 +84,32 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
-        singleShot: "true"
+        status: "pending"
+```
+
+### Action sets commit to pending status with comment, and updates check and adds comment at the end of the workflow
+
+```
+name: Test
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ouzi-dev/commit-status-updater@v1.0.0
+      with:
+        status: "pending"
         addHoldComment: "true"
     - if: always()
       uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
-        singleShot: "true"
         addHoldComment: "true"
 ```
 
-### Action with post and custom hold comments
+### Action with custom hold comments
 
 ```
 name: Test
@@ -121,13 +123,14 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
+        status: "pending"
         addHoldComment: "true"
         pendingComment: "action pending!"
         successComment: "action success!"
         failComment: "action failed!"
 ```
  
-### Action with no post, no comments, set commit to "pending" status and set url, description and specific name
+### Action no comments, set commit to "pending" status and set url, description and specific name
 
 ```
 name: Test
@@ -141,7 +144,6 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ouzi-dev/commit-status-updater@v1.0.0
       with:
-        singleShot: "true"
         status: "pending"
         url: http://myurl.io/
         description: "this is my status check"
