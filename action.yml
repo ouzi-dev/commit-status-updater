@@ -1,18 +1,71 @@
 name: 'commit-status-updater'
-description: 'Updates the current commit status'
+description: 'A simple Github Action that allows us to update the status of the last commit in a pull request'
 author: 'Ouzi, ltd. Ouzi Team <team@ouzi.dev>'
 branding:
   icon: 'check-circle'
   color: 'purple'
 inputs:
-  context:  
-    description: 'The context for the status. Default is GithubActions - ${GITHUB_WORKFLOW}'
-  state:  
-    description: "Commit state. Possible values are 'pending', 'success', 'error' or 'failure'"
-    default: 'pending'
   token:
-    description: "The Github token"
-
+    description: >
+      Auth token used to add status commits.
+    default: "${{ github.token }}"
+    required: true
+  url:
+    description: >
+      URL for the status check.
+    default: ""
+  description:
+    description: >
+      Description for the status check.
+    default: ""
+  name:
+    description: >
+      The context for the status. Default is GithubActions - ${GITHUB_WORKFLOW}
+    default: "GithubActions - ${{ github.workflow }}"
+    required: true
+  singleShot:
+    description: >
+      If "true" the action won't run the post step, and the action will expect
+      a valid commit status in the input "status".
+      If "false" (default value), the action expects a valid job status and will
+      run the post step.
+    default: "false"
+    required: true
+  status:
+    description: >
+      If "singleShot" is set to "true" this has to be a valid commit status.
+      Valid commit status are: 'error', 'failure', 'pending' and 'success'
+      If "singleShot" is set to "false" this has to be a valid job status.
+      Valid job status are: 'success', 'failure' and 'cancelled'
+      By default it will use the current job status.
+    default: "${{ job.status }}"
+    required: true
+  ignoreForks:
+    description: >
+      If the pull request is from a fork the action won't add a status by default.
+      This is because the action won't have a token with permissions to add the status
+      to the commit. You can disable this, but then you'll have to provide a token
+      with enough permissions to add status to the commits in the forks!
+    default: "true"
+    required: true
+  addHoldComment:
+    description: >
+      If true the action will add a comment at the beginning and at the end. This is useful
+      if you use prow and you get PRs from forks, you can use `/hold` and `/hold cancel`
+      instead of the status check since the token won't have permissions to do that.
+      Warning: Be careful using this with `singleShot = true`, since you won't add a
+      message at the end!
+    default: "false"
+    required: true
+  startComment:
+    description: >
+      This is the message to add to the pull request when the action runs.
+    default: "/hold"
+  endComment:
+    description: >
+      This is the message to add to the pull request in the action post step.
+    default: "/hold cancel"
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: node12
+  main: dist/index.js
+  post: dist/index.js
