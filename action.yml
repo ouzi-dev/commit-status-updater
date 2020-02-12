@@ -32,7 +32,7 @@ inputs:
       If the passed status is 'failure' or 'cancelled' it wil set status commit 'failure'
       If the passed status is 'success' it will set status commit 'success'
       If the passed status is 'error' it will set status commit 'error'
-    default: "${{ job.status }}"
+    default: "pending"
     required: true
   ignoreForks:
     description: >
