@@ -4,22 +4,24 @@ import * as githubHelper from './githubHelper'
 import * as utils from './utils'
 import {IParams} from './paramsHelper'
 
-export function run(): void {
+export async function run(): Promise<void> {
   try {
-    utils.validateEventType()
+    await utils.validateEventType()
 
-    const params: IParams = inputsHelper.getInputs()
+    const params: IParams = await inputsHelper.getInputs()
 
-    const ghHelper = githubHelper.CreateGithubHelper(params.token)
+    const ghHelper: githubHelper.IGithubHelper = await githubHelper.CreateGithubHelper(
+      params.token
+    )
 
-    if (params.ignoreForks && ghHelper.isFork()) {
+    if (params.ignoreForks && (await ghHelper.isFork())) {
       core.info('ignoring PR from fork...')
     } else {
-      ghHelper.setStatus(params)
+      await ghHelper.setStatus(params)
     }
 
     if (params.addHoldComment) {
-      ghHelper.addComment(params.selectedComment)
+      await ghHelper.addComment(params.selectedComment)
     }
   } catch (error) {
     core.setFailed(error.message)
