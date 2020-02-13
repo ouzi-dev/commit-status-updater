@@ -41,7 +41,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.23",
+    "@types/jest": "^25.1.2",
     "@types/node": "^12.7.12",
     "@types/uuid": "^3.4.6",
     "@typescript-eslint/parser": "^2.8.0",
