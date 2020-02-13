@@ -4,13 +4,15 @@ import {WebhookPayloadPullRequest} from '@octokit/webhooks'
 import {IParams} from './paramsHelper'
 
 export interface IGithubHelper {
-  isFork(): boolean
-  setStatus(params: IParams): void
-  addComment(comment: string): void
+  isFork(): Promise<boolean>
+  setStatus(params: IParams): Promise<void>
+  addComment(comment: string): Promise<void>
 }
 
-export function CreateGithubHelper(token: string): IGithubHelper {
-  return GithubHelper.createGithubHelper(token)
+export async function CreateGithubHelper(
+  token: string
+): Promise<IGithubHelper> {
+  return await GithubHelper.createGithubHelper(token)
 }
 
 class GithubHelper {
@@ -23,13 +25,13 @@ class GithubHelper {
 
   private constructor() {}
 
-  static createGithubHelper(token: string): GithubHelper {
+  static async createGithubHelper(token: string): Promise<GithubHelper> {
     const result = new GithubHelper()
-    result.initialize(token)
+    await result.initialize(token)
     return result
   }
 
-  private initialize(token: string): void {
+  private async initialize(token: string): Promise<void> {
     this.octokit = new github.GitHub(token)
     this.payload = github.context.payload as WebhookPayloadPullRequest
     this.owner = this.payload.pull_request.head.repo.owner.login
@@ -38,16 +40,16 @@ class GithubHelper {
     this.issueNumber = this.payload.pull_request.number
   }
 
-  isFork(): boolean {
+  async isFork(): Promise<boolean> {
     const baseRepo = this.payload.pull_request.base.repo.full_name
     const headRepo = this.payload.pull_request.head.repo.full_name
 
     return baseRepo !== headRepo
   }
 
-  setStatus(params: IParams): void {
-    this.octokit.repos
-      .createStatus({
+  async setStatus(params: IParams): Promise<void> {
+    try {
+      await this.octokit.repos.createStatus({
         context: params.name,
         description: params.description,
         owner: this.owner,
@@ -56,29 +58,25 @@ class GithubHelper {
         state: params.status,
         target_url: params.url
       })
-      .then(() => {
-        core.info(`Updated build status: ${params.status}`)
-      })
-      .catch(error => {
-        core.setFailed(`error while setting context status: ${error.message}`)
-      })
+      core.info(`Updated build status: ${params.status}`)
+    } catch (error) {
+      throw new Error(`error while setting context status: ${error.message}`)
+    }
   }
 
-  addComment(comment: string): void {
-    this.octokit.issues
-      .createComment({
+  async addComment(comment: string): Promise<void> {
+    try {
+      await this.octokit.issues.createComment({
         owner: this.owner,
         repo: this.repo,
         issue_number: this.issueNumber,
         body: comment
       })
-      .then(() => {
-        core.info(`Comment added to pull request`)
-      })
-      .catch(error => {
-        core.setFailed(
-          `error while adding comment to pull request: ${error.message}`
-        )
-      })
+      core.info(`Comment added to pull request`)
+    } catch (error) {
+      throw new Error(
+        `error while adding comment to pull request: ${error.message}`
+      )
+    }
   }
 }

@@ -30,41 +30,53 @@ describe('inputsHelper tests', () => {
     jest.resetModules()
   })
 
-  it('requires token', () => {
-    assert.throws(() => {
-      inputsHelper.getInputs()
-    }, /token can't be an empty string/)
+  it('requires token', async () => {
+    expect.assertions(1)
+    await expect(inputsHelper.getInputs()).rejects.toEqual(
+      TypeError("token can't be an empty string")
+    )
   })
 
-  it('requires name', () => {
+  it('requires name', async () => {
+    expect.assertions(1)
+
     inputs.token = '1234567abcdefg'
-    assert.throws(() => {
-      inputsHelper.getInputs()
-    }, /name can't be an empty string/)
+
+    await expect(inputsHelper.getInputs()).rejects.toEqual(
+      TypeError("name can't be an empty string")
+    )
   })
 
-  it('requires status', () => {
+  it('requires status', async () => {
+    expect.assertions(1)
+
     inputs.name = 'my_name'
     inputs.token = '1234567abcdefg'
-    assert.throws(() => {
-      inputsHelper.getInputs()
-    }, /status can't be an empty string/)
+
+    await expect(inputsHelper.getInputs()).rejects.toEqual(
+      TypeError("status can't be an empty string")
+    )
   })
 
-  it('requires valid commit status', () => {
+  it('requires valid commit status', async () => {
+    expect.assertions(1)
+
     inputs.name = 'my_name'
     inputs.token = '1234567abcdefg'
     inputs.status = 'bleh'
-    assert.throws(() => {
-      inputsHelper.getInputs()
-    }, /TypeError: unknown commit or job status: bleh/)
+
+    await expect(inputsHelper.getInputs()).rejects.toEqual(
+      TypeError('unknown commit or job status: bleh')
+    )
   })
 
-  it('sets correct default values', () => {
+  it('sets correct default values', async () => {
     inputs.name = 'my_name'
     inputs.token = '1234567abcdefg'
     inputs.status = 'Success'
-    const params: IParams = inputsHelper.getInputs()
+
+    const params: IParams = await inputsHelper.getInputs()
+
     expect(params).toBeTruthy()
     expect(params.name).toBe('my_name')
     expect(params.token).toBe('1234567abcdefg')
@@ -79,7 +91,7 @@ describe('inputsHelper tests', () => {
     expect(params.ignoreForks).toBeTruthy()
   })
 
-  it('sets success status', () => {
+  it('sets success status', async () => {
     inputs.singleShot = 'false'
     inputs.status = 'Success'
     inputs.token = 'my_token'
@@ -92,7 +104,8 @@ describe('inputsHelper tests', () => {
     inputs.successComment = '/hold cancel'
     inputs.failComment = '/hold fail'
 
-    const params: IParams = inputsHelper.getInputs()
+    const params: IParams = await inputsHelper.getInputs()
+
     expect(params).toBeTruthy()
     expect(params.token).toBe('my_token')
     expect(params.url).toBe('my_url')
@@ -107,8 +120,7 @@ describe('inputsHelper tests', () => {
     expect(params.ignoreForks).toBeTruthy()
   })
 
-  it('sets pending status', () => {
-    const isPost = true
+  it('sets pending status', async () => {
     inputs.singleShot = 'false'
     inputs.status = 'Pending'
     inputs.token = 'my_token'
@@ -121,7 +133,8 @@ describe('inputsHelper tests', () => {
     inputs.successComment = '/hold cancel'
     inputs.failComment = '/hold fail'
 
-    const params: IParams = inputsHelper.getInputs(isPost)
+    const params: IParams = await inputsHelper.getInputs()
+
     expect(params).toBeTruthy()
     expect(params.token).toBe('my_token')
     expect(params.url).toBe('')
@@ -136,7 +149,7 @@ describe('inputsHelper tests', () => {
     expect(params.ignoreForks).toBeFalsy()
   })
 
-  it('sets correct status and comment', () => {
+  it('sets correct status and comment', async () => {
     inputs.singleShot = 'false'
     inputs.token = 'my_token'
     inputs.url = ''
@@ -149,31 +162,32 @@ describe('inputsHelper tests', () => {
     inputs.successComment = '/hold cancel'
     inputs.failComment = '/hold fail'
 
-    let params: IParams = inputsHelper.getInputs()
+    let params: IParams = await inputsHelper.getInputs()
+
     expect(params).toBeTruthy()
     expect(params.status).toBe('success')
     expect(params.selectedComment).toBe('/hold cancel')
 
     inputs.status = 'pending'
-    params = inputsHelper.getInputs()
+    params = await inputsHelper.getInputs()
     expect(params).toBeTruthy()
     expect(params.status).toBe('pending')
     expect(params.selectedComment).toBe('/hold')
 
     inputs.status = 'failure'
-    params = inputsHelper.getInputs()
+    params = await inputsHelper.getInputs()
     expect(params).toBeTruthy()
     expect(params.status).toBe('failure')
     expect(params.selectedComment).toBe('/hold fail')
 
     inputs.status = 'cancelled'
-    params = inputsHelper.getInputs()
+    params = await inputsHelper.getInputs()
     expect(params).toBeTruthy()
     expect(params.status).toBe('failure')
     expect(params.selectedComment).toBe('/hold fail')
 
     inputs.status = 'error'
-    params = inputsHelper.getInputs()
+    params = await inputsHelper.getInputs()
     expect(params).toBeTruthy()
     expect(params.status).toBe('error')
     expect(params.selectedComment).toBe('/hold fail')

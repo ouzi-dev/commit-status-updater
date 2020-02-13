@@ -20,7 +20,10 @@ export interface IParams {
   selectedComment: string
 }
 
-export function getMessageForStatus(status: Status, params: IParams): string {
+export async function getMessageForStatus(
+  status: Status,
+  params: IParams
+): Promise<string> {
   switch (status) {
     case PENDING: {
       return params.pendingComment
@@ -34,7 +37,7 @@ export function getMessageForStatus(status: Status, params: IParams): string {
   }
 }
 
-export function getStatus(str: string): Status {
+export async function getStatus(str: string): Promise<Status> {
   const toLower = str.toLowerCase()
   switch (toLower) {
     case ERROR: {

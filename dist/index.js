@@ -406,6 +406,15 @@ module.exports._enoent = enoent;
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -419,23 +428,25 @@ const inputsHelper = __importStar(__webpack_require__(379));
 const githubHelper = __importStar(__webpack_require__(959));
 const utils = __importStar(__webpack_require__(611));
 function run() {
-    try {
-        utils.validateEventType();
-        const params = inputsHelper.getInputs();
-        const ghHelper = githubHelper.CreateGithubHelper(params.token);
-        if (params.ignoreForks && ghHelper.isFork()) {
-            core.info('ignoring PR from fork...');
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield utils.validateEventType();
+            const params = yield inputsHelper.getInputs();
+            const ghHelper = yield githubHelper.CreateGithubHelper(params.token);
+            if (params.ignoreForks && (yield ghHelper.isFork())) {
+                core.info('ignoring PR from fork...');
+            }
+            else {
+                yield ghHelper.setStatus(params);
+            }
+            if (params.addHoldComment) {
+                yield ghHelper.addComment(params.selectedComment);
+            }
         }
-        else {
-            ghHelper.setStatus(params);
+        catch (error) {
+            core.setFailed(error.message);
         }
-        if (params.addHoldComment) {
-            ghHelper.addComment(params.selectedComment);
-        }
-    }
-    catch (error) {
-        core.setFailed(error.message);
-    }
+    });
 }
 exports.run = run;
 
@@ -4538,6 +4549,15 @@ function octokitDebug(octokit) {
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -4559,44 +4579,50 @@ const PENDING_COMMENT_PARAM = 'pendingComment';
 const SUCCESS_COMMENT_PARAM = 'successComment';
 const FAIL_COMMENT_PARAM = 'failComment';
 function isEmptyString(str) {
-    return !str || str.length === 0;
+    return __awaiter(this, void 0, void 0, function* () {
+        return !str || str.length === 0;
+    });
 }
 function validateString(str, paramName) {
-    if (isEmptyString(str)) {
-        throw new TypeError(`${paramName} can't be an empty string`);
-    }
+    return __awaiter(this, void 0, void 0, function* () {
+        if (yield isEmptyString(str)) {
+            throw new TypeError(`${paramName} can't be an empty string`);
+        }
+    });
 }
 function getInputs() {
-    const result = {};
-    result.token = core.getInput(TOKEN_PARAM);
-    validateString(result.token, TOKEN_PARAM);
-    result.name = core.getInput(NAME_PARAM);
-    validateString(result.name, NAME_PARAM);
-    const status = core.getInput(STATUS_PARAM);
-    validateString(status, STATUS_PARAM);
-    result.status = paramsHelper.getStatus(status);
-    result.url = core.getInput(URL_PARAM) || '';
-    result.description = core.getInput(DESCRIPTION_PARAM) || '';
-    const ignoreForks = core.getInput(IGNORE_FORKS_PARAM);
-    if (isEmptyString(ignoreForks)) {
-        result.ignoreForks = true;
-    }
-    else {
-        result.ignoreForks = !(ignoreForks.toLowerCase() === 'false');
-    }
-    const addHoldComment = core.getInput(ADD_HOLD_COMMENT_PARAM);
-    if (isEmptyString(addHoldComment)) {
-        result.addHoldComment = false;
-    }
-    else {
-        result.addHoldComment = addHoldComment.toLowerCase() === 'true';
-    }
-    result.pendingComment = core.getInput(PENDING_COMMENT_PARAM) || '';
-    result.successComment = core.getInput(SUCCESS_COMMENT_PARAM) || '';
-    result.failComment = core.getInput(FAIL_COMMENT_PARAM) || '';
-    const selectedComment = paramsHelper.getMessageForStatus(result.status, result);
-    result.selectedComment = selectedComment;
-    return result;
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = {};
+        result.token = core.getInput(TOKEN_PARAM);
+        yield validateString(result.token, TOKEN_PARAM);
+        result.name = core.getInput(NAME_PARAM);
+        yield validateString(result.name, NAME_PARAM);
+        const status = core.getInput(STATUS_PARAM);
+        yield validateString(status, STATUS_PARAM);
+        result.status = yield paramsHelper.getStatus(status);
+        result.url = core.getInput(URL_PARAM) || '';
+        result.description = core.getInput(DESCRIPTION_PARAM) || '';
+        const ignoreForks = core.getInput(IGNORE_FORKS_PARAM);
+        if (yield isEmptyString(ignoreForks)) {
+            result.ignoreForks = true;
+        }
+        else {
+            result.ignoreForks = !(ignoreForks.toLowerCase() === 'false');
+        }
+        const addHoldComment = core.getInput(ADD_HOLD_COMMENT_PARAM);
+        if (yield isEmptyString(addHoldComment)) {
+            result.addHoldComment = false;
+        }
+        else {
+            result.addHoldComment = addHoldComment.toLowerCase() === 'true';
+        }
+        result.pendingComment = core.getInput(PENDING_COMMENT_PARAM) || '';
+        result.successComment = core.getInput(SUCCESS_COMMENT_PARAM) || '';
+        result.failComment = core.getInput(FAIL_COMMENT_PARAM) || '';
+        const selectedComment = yield paramsHelper.getMessageForStatus(result.status, result);
+        result.selectedComment = selectedComment;
+        return result;
+    });
 }
 exports.getInputs = getInputs;
 
@@ -8215,6 +8241,15 @@ module.exports = require("http");
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -8225,9 +8260,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const github = __importStar(__webpack_require__(469));
 function validateEventType() {
-    if (github.context.eventName !== 'pull_request') {
-        throw new Error('Error, action only works for pull_request events!');
-    }
+    return __awaiter(this, void 0, void 0, function* () {
+        if (github.context.eventName !== 'pull_request') {
+            throw new Error('Error, action only works for pull_request events!');
+        }
+    });
 }
 exports.validateEventType = validateEventType;
 
@@ -12027,6 +12064,15 @@ module.exports.shellSync = (cmd, opts) => handleShell(module.exports.sync, cmd, 
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const SUCCESS = 'success';
 const ERROR = 'error';
@@ -12034,41 +12080,45 @@ const FAILURE = 'failure';
 const PENDING = 'pending';
 const CANCELLED = 'cancelled';
 function getMessageForStatus(status, params) {
-    switch (status) {
-        case PENDING: {
-            return params.pendingComment;
+    return __awaiter(this, void 0, void 0, function* () {
+        switch (status) {
+            case PENDING: {
+                return params.pendingComment;
+            }
+            case SUCCESS: {
+                return params.successComment;
+            }
+            default: {
+                return params.failComment;
+            }
         }
-        case SUCCESS: {
-            return params.successComment;
-        }
-        default: {
-            return params.failComment;
-        }
-    }
+    });
 }
 exports.getMessageForStatus = getMessageForStatus;
 function getStatus(str) {
-    const toLower = str.toLowerCase();
-    switch (toLower) {
-        case ERROR: {
-            return ERROR;
+    return __awaiter(this, void 0, void 0, function* () {
+        const toLower = str.toLowerCase();
+        switch (toLower) {
+            case ERROR: {
+                return ERROR;
+            }
+            case FAILURE: {
+                return FAILURE;
+            }
+            case PENDING: {
+                return PENDING;
+            }
+            case SUCCESS: {
+                return SUCCESS;
+            }
+            case CANCELLED: {
+                return FAILURE;
+            }
+            default: {
+                throw new TypeError(`unknown commit or job status: ${str}`);
+            }
         }
-        case FAILURE: {
-            return FAILURE;
-        }
-        case PENDING: {
-            return PENDING;
-        }
-        case SUCCESS: {
-            return SUCCESS;
-        }
-        case CANCELLED: {
-            return FAILURE;
-        }
-        default: {
-            throw new TypeError(`unknown commit or job status: ${str}`);
-        }
-    }
+    });
 }
 exports.getStatus = getStatus;
 
@@ -12080,6 +12130,15 @@ exports.getStatus = getStatus;
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -12091,60 +12150,70 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const github = __importStar(__webpack_require__(469));
 const core = __importStar(__webpack_require__(470));
 function CreateGithubHelper(token) {
-    return GithubHelper.createGithubHelper(token);
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield GithubHelper.createGithubHelper(token);
+    });
 }
 exports.CreateGithubHelper = CreateGithubHelper;
 class GithubHelper {
     constructor() { }
     static createGithubHelper(token) {
-        const result = new GithubHelper();
-        result.initialize(token);
-        return result;
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = new GithubHelper();
+            yield result.initialize(token);
+            return result;
+        });
     }
     initialize(token) {
-        this.octokit = new github.GitHub(token);
-        this.payload = github.context.payload;
-        this.owner = this.payload.pull_request.head.repo.owner.login;
-        this.repo = this.payload.pull_request.head.repo.name;
-        this.sha = this.payload.pull_request.head.sha;
-        this.issueNumber = this.payload.pull_request.number;
+        return __awaiter(this, void 0, void 0, function* () {
+            this.octokit = new github.GitHub(token);
+            this.payload = github.context.payload;
+            this.owner = this.payload.pull_request.head.repo.owner.login;
+            this.repo = this.payload.pull_request.head.repo.name;
+            this.sha = this.payload.pull_request.head.sha;
+            this.issueNumber = this.payload.pull_request.number;
+        });
     }
     isFork() {
-        const baseRepo = this.payload.pull_request.base.repo.full_name;
-        const headRepo = this.payload.pull_request.head.repo.full_name;
-        return baseRepo !== headRepo;
+        return __awaiter(this, void 0, void 0, function* () {
+            const baseRepo = this.payload.pull_request.base.repo.full_name;
+            const headRepo = this.payload.pull_request.head.repo.full_name;
+            return baseRepo !== headRepo;
+        });
     }
     setStatus(params) {
-        this.octokit.repos
-            .createStatus({
-            context: params.name,
-            description: params.description,
-            owner: this.owner,
-            repo: this.repo,
-            sha: this.sha,
-            state: params.status,
-            target_url: params.url
-        })
-            .then(() => {
-            core.info(`Updated build status: ${params.status}`);
-        })
-            .catch(error => {
-            core.setFailed(`error while setting context status: ${error.message}`);
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.octokit.repos.createStatus({
+                    context: params.name,
+                    description: params.description,
+                    owner: this.owner,
+                    repo: this.repo,
+                    sha: this.sha,
+                    state: params.status,
+                    target_url: params.url
+                });
+                core.info(`Updated build status: ${params.status}`);
+            }
+            catch (error) {
+                throw new Error(`error while setting context status: ${error.message}`);
+            }
         });
     }
     addComment(comment) {
-        this.octokit.issues
-            .createComment({
-            owner: this.owner,
-            repo: this.repo,
-            issue_number: this.issueNumber,
-            body: comment
-        })
-            .then(() => {
-            core.info(`Comment added to pull request`);
-        })
-            .catch(error => {
-            core.setFailed(`error while adding comment to pull request: ${error.message}`);
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.octokit.issues.createComment({
+                    owner: this.owner,
+                    repo: this.repo,
+                    issue_number: this.issueNumber,
+                    body: comment
+                });
+                core.info(`Comment added to pull request`);
+            }
+            catch (error) {
+                throw new Error(`error while adding comment to pull request: ${error.message}`);
+            }
         });
     }
 }

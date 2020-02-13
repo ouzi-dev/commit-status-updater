@@ -35,7 +35,7 @@ describe('runner tests', () => {
     jest.resetModules()
   })
 
-  it('run sets status and comment', () => {
+  it('run sets status and comment', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'
     params.ignoreForks = true
@@ -44,13 +44,15 @@ describe('runner tests', () => {
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(false)
-    runner.run()
+
+    await runner.run()
+
     expect(mockUtils.validateEventType).toHaveBeenCalled()
     expect(mockIGithubHelper.setStatus).toHaveBeenCalledWith(params)
     expect(mockIGithubHelper.addComment).toHaveBeenCalledWith('my comment')
   })
 
-  it('run sets status and no comment', () => {
+  it('run sets status and no comment', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'
     params.ignoreForks = true
@@ -59,13 +61,15 @@ describe('runner tests', () => {
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(false)
-    runner.run()
+
+    await runner.run()
+
     expect(mockUtils.validateEventType).toHaveBeenCalled()
     expect(mockIGithubHelper.setStatus).toHaveBeenCalledWith(params)
     expect(mockIGithubHelper.addComment).toHaveBeenCalledTimes(0)
   })
 
-  it('run does not set status or comment', () => {
+  it('run does not set status or comment', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'
     params.ignoreForks = true
@@ -74,13 +78,15 @@ describe('runner tests', () => {
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(true)
-    runner.run()
+
+    await runner.run()
+
     expect(mockUtils.validateEventType).toHaveBeenCalled()
     expect(mockIGithubHelper.setStatus).toHaveBeenCalledTimes(0)
     expect(mockIGithubHelper.addComment).toHaveBeenCalledTimes(0)
   })
 
-  it('run sets status if ignore fork false', () => {
+  it('run sets status if ignore fork false', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'
     params.ignoreForks = false
@@ -88,7 +94,9 @@ describe('runner tests', () => {
     params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
-    runner.run()
+
+    await runner.run()
+
     expect(mockUtils.validateEventType).toHaveBeenCalled()
     expect(mockIGithubHelper.isFork).toHaveBeenCalledTimes(0)
     expect(mockIGithubHelper.setStatus).toHaveBeenCalledWith(params)
