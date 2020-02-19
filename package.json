@@ -35,7 +35,7 @@
   "dependencies": {
     "@actions/core": "^1.2.2",
     "@actions/github": "^2.0.2",
-    "@octokit/webhooks": "^7.0.0",
+    "@octokit/webhooks": "^7.1.0",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
