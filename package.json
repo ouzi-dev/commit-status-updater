@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/ouzi-dev/commit-status-updater#readme",
   "dependencies": {
-    "@actions/core": "^1.2.2",
+    "@actions/core": "^1.2.3",
     "@actions/github": "^2.0.2",
     "@octokit/webhooks": "^7.0.0",
     "uuid": "^3.4.0"
