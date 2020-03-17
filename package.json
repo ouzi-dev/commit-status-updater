@@ -1,6 +1,6 @@
 {
   "name": "commit-status-updater",
-  "version": "1.0.0",
+  "version": "v1.0.3",
   "description": "commit status updater",
   "main": "lib/main.js",
   "scripts": {
@@ -33,32 +33,33 @@
   },
   "homepage": "https://github.com/ouzi-dev/commit-status-updater#readme",
   "dependencies": {
-    "@actions/core": "^1.2.2",
-    "@actions/github": "^2.0.2",
-    "@octokit/webhooks": "^7.0.0",
-    "uuid": "^3.4.0"
+    "@actions/core": "^1.2.3",
+    "@actions/github": "^2.1.1",
+    "@octokit/webhooks": "^7.1.0",
+    "npm-check-updates": "^4.0.4",
+    "uuid": "^7.0.2"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.2",
-    "@types/node": "^13.7.1",
-    "@types/uuid": "^3.4.7",
-    "@typescript-eslint/parser": "^2.19.2",
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.1",
+    "@types/uuid": "^7.0.0",
+    "@typescript-eslint/parser": "^2.24.0",
     "@zeit/ncc": "^0.21.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-github": "^3.4.0",
-    "eslint-plugin-jest": "^23.7.0",
-    "jest": "^24.9.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-github": "^3.4.1",
+    "eslint-plugin-jest": "^23.8.2",
+    "jest": "^25.1.0",
     "jest-circus": "^25.1.0",
     "js-yaml": "^3.13.1",
     "prettier": "^1.19.1",
-    "ts-jest": "^24.3.0",
-    "typescript": "^3.7.5",
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.8.3",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/exec": "^5.0.0",
-    "@semantic-release/github": "^7.0.3",
-    "@semantic-release/release-notes-generator": "^9.0.0",
-    "semantic-release": "^17.0.3",
-    "env-ci": "^5.0.1"
+    "@semantic-release/github": "^7.0.4",
+    "@semantic-release/release-notes-generator": "^9.0.1",
+    "semantic-release": "^17.0.4",
+    "env-ci": "^5.0.2"
   },
   "release": {
     "plugins": [
