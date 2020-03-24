@@ -36,7 +36,7 @@
     "@actions/core": "^1.2.3",
     "@actions/github": "^2.1.1",
     "@octokit/webhooks": "^7.1.0",
-    "npm-check-updates": "^4.0.4",
+    "npm-check-updates": "^4.0.5",
     "uuid": "^7.0.2"
   },
   "devDependencies": {
