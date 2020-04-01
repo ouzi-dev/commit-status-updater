@@ -37,7 +37,7 @@
     "@actions/github": "^2.1.1",
     "@octokit/webhooks": "^7.1.0",
     "npm-check-updates": "^4.0.4",
-    "uuid": "^7.0.2"
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "@types/jest": "^25.1.4",
