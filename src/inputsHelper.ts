@@ -3,6 +3,7 @@ import * as paramsHelper from './paramsHelper'
 
 const STATUS_PARAM = 'status'
 const TOKEN_PARAM = 'token'
+const SHA_PARAM = 'sha'
 const URL_PARAM = 'url'
 const DESCRIPTION_PARAM = 'description'
 const NAME_PARAM = 'name'
@@ -28,6 +29,10 @@ export async function getInputs(): Promise<paramsHelper.IParams> {
   result.token = core.getInput(TOKEN_PARAM)
 
   await validateString(result.token, TOKEN_PARAM)
+
+  result.sha = core.getInput(SHA_PARAM)
+
+  await validateString(result.sha, SHA_PARAM)
 
   result.name = core.getInput(NAME_PARAM)
 

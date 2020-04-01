@@ -12,10 +12,13 @@ GitHub does not update the status of a commit when running workflow and therefor
 ## Input Parameters
 
 * token: Auth token used to add status commits
-  
   * required
-  * default: "${ github.token }"
-  
+  * default: "${{ github.token }}"
+
+* sha: The commit to add the status check to
+  * required
+  * default: "${{ github.event.pull_request.head.sha || github.sha }}"
+
 * name: The Name of the status check to add to the commit
   * required
   * default: "GithubActions - ${GITHUB_WORKFLOW}"

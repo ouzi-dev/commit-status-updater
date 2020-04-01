@@ -19,7 +19,6 @@ class GithubHelper {
   private payload
   private owner
   private repo
-  private sha
   private issueNumber
   private octokit
 
@@ -36,7 +35,6 @@ class GithubHelper {
     this.payload = github.context.payload as WebhookPayloadPullRequest
     this.owner = this.payload.pull_request.head.repo.owner.login
     this.repo = this.payload.pull_request.head.repo.name
-    this.sha = this.payload.pull_request.head.sha
     this.issueNumber = this.payload.pull_request.number
   }
 
@@ -54,7 +52,7 @@ class GithubHelper {
         description: params.description,
         owner: this.owner,
         repo: this.repo,
-        sha: this.sha,
+        sha: params.sha,
         state: params.status,
         target_url: params.url
       })

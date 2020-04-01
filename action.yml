@@ -10,6 +10,11 @@ inputs:
       Auth token used to add status commits.
     default: "${{ github.token }}"
     required: true
+  sha:
+    description: >
+      The commit to update the status on.
+    default: "${{ github.event.pull_request.head.sha || github.sha }}"
+    required: true
   url:
     description: >
       URL for the status check.

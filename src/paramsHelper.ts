@@ -8,6 +8,7 @@ type Status = 'error' | 'failure' | 'pending' | 'success'
 
 export interface IParams {
   token: string
+  sha: string
   url: string
   description: string
   name: string

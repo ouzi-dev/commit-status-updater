@@ -37,10 +37,21 @@ describe('inputsHelper tests', () => {
     )
   })
 
+  it('requires sha', async () => {
+    expect.assertions(1)
+
+    inputs.token = '1234567abcdefg'
+
+    await expect(inputsHelper.getInputs()).rejects.toEqual(
+      TypeError("sha can't be an empty string")
+    )
+  })
+
   it('requires name', async () => {
     expect.assertions(1)
 
     inputs.token = '1234567abcdefg'
+    inputs.sha = 'abcdefg1234567'
 
     await expect(inputsHelper.getInputs()).rejects.toEqual(
       TypeError("name can't be an empty string")
@@ -52,6 +63,7 @@ describe('inputsHelper tests', () => {
 
     inputs.name = 'my_name'
     inputs.token = '1234567abcdefg'
+    inputs.sha = 'abcdefg1234567'
 
     await expect(inputsHelper.getInputs()).rejects.toEqual(
       TypeError("status can't be an empty string")
@@ -63,6 +75,7 @@ describe('inputsHelper tests', () => {
 
     inputs.name = 'my_name'
     inputs.token = '1234567abcdefg'
+    inputs.sha = 'abcdefg1234567'
     inputs.status = 'bleh'
 
     await expect(inputsHelper.getInputs()).rejects.toEqual(
@@ -73,6 +86,7 @@ describe('inputsHelper tests', () => {
   it('sets correct default values', async () => {
     inputs.name = 'my_name'
     inputs.token = '1234567abcdefg'
+    inputs.sha = 'abcdefg1234567'
     inputs.status = 'Success'
 
     const params: IParams = await inputsHelper.getInputs()
@@ -80,6 +94,7 @@ describe('inputsHelper tests', () => {
     expect(params).toBeTruthy()
     expect(params.name).toBe('my_name')
     expect(params.token).toBe('1234567abcdefg')
+    expect(params.sha).toBe('abcdefg1234567')
     expect(params.url).toBe('')
     expect(params.description).toBe('')
     expect(params.status).toBe('success')
@@ -95,6 +110,7 @@ describe('inputsHelper tests', () => {
     inputs.singleShot = 'false'
     inputs.status = 'Success'
     inputs.token = 'my_token'
+    inputs.sha = 'abcdefg1234567'
     inputs.url = 'my_url'
     inputs.description = 'my_description'
     inputs.name = 'my_name'
@@ -108,6 +124,7 @@ describe('inputsHelper tests', () => {
 
     expect(params).toBeTruthy()
     expect(params.token).toBe('my_token')
+    expect(params.sha).toBe('abcdefg1234567')
     expect(params.url).toBe('my_url')
     expect(params.description).toBe('my_description')
     expect(params.name).toBe('my_name')
@@ -124,6 +141,7 @@ describe('inputsHelper tests', () => {
     inputs.singleShot = 'false'
     inputs.status = 'Pending'
     inputs.token = 'my_token'
+    inputs.sha = 'abcdefg1234567'
     inputs.url = ''
     inputs.description = ''
     inputs.name = 'my_name'
@@ -137,6 +155,7 @@ describe('inputsHelper tests', () => {
 
     expect(params).toBeTruthy()
     expect(params.token).toBe('my_token')
+    expect(params.sha).toBe('abcdefg1234567')
     expect(params.url).toBe('')
     expect(params.description).toBe('')
     expect(params.name).toBe('my_name')
@@ -152,6 +171,7 @@ describe('inputsHelper tests', () => {
   it('sets correct status and comment', async () => {
     inputs.singleShot = 'false'
     inputs.token = 'my_token'
+    inputs.sha = 'abcdefg1234567'
     inputs.url = ''
     inputs.description = ''
     inputs.name = 'my_name'
