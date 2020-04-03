@@ -40,7 +40,7 @@
     "uuid": "^7.0.2"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.4",
+    "@types/jest": "^25.1.5",
     "@types/node": "^13.9.1",
     "@types/uuid": "^7.0.0",
     "@typescript-eslint/parser": "^2.24.0",
