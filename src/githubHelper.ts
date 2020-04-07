@@ -65,8 +65,10 @@ class GithubHelper {
   }
 
   async addComment(comment: string): Promise<void> {
+    const headRepo = this.payload.pull_request.head.repo.owner.login
+    const baseRepo = this.payload.pull_request.base.repo.owner.login
     core.info(
-      `owner: ${this.owner}, repo: ${this.repo}, issue: ${this.issueNumber}`
+      `headRepo: ${headRepo}, base: ${baseRepo}, issue: ${this.issueNumber}`
     )
     try {
       await this.octokit.issues.createComment({

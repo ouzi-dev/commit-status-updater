@@ -28427,7 +28427,9 @@ class GithubHelper {
     }
     addComment(comment) {
         return __awaiter(this, void 0, void 0, function* () {
-            core.info(`owner: ${this.owner}, repo: ${this.repo}, issue: ${this.issueNumber}`);
+            const headRepo = this.payload.pull_request.head.repo.owner.login;
+            const baseRepo = this.payload.pull_request.base.repo.owner.login;
+            core.info(`headRepo: ${headRepo}, base: ${baseRepo}, issue: ${this.issueNumber}`);
             try {
                 yield this.octokit.issues.createComment({
                     owner: this.owner,
