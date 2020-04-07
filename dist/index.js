@@ -3555,9 +3555,9 @@ module.exports = safer
 /***/ }),
 
 /***/ 256:
-/***/ (function() {
+/***/ (function(module) {
 
-eval("require")("iconv");
+module.exports = eval("require")("iconv");
 
 
 /***/ }),

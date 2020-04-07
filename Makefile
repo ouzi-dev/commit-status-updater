@@ -41,7 +41,7 @@ semantic-release-dry-run:
 install-npm-check-updates:
 	npm install npm-check-updates
 
-.PHONY: update-denendencies
-update-denendencies: install-npm-check-updates
+.PHONY: update-dependencies
+update-dependencies: install-npm-check-updates
 	ncu -u
 	npm install
