@@ -1445,9 +1445,11 @@ function run() {
             }
             else {
                 yield ghHelper.setStatus(params);
-            }
-            if (params.addHoldComment) {
-                yield ghHelper.addComment(params.selectedComment);
+                // for now only add comments if it's not a fork or we explicitly say don't ignore forks
+                // we should have a token with permissions in the fork for this
+                if (params.addHoldComment) {
+                    yield ghHelper.addComment(params.selectedComment);
+                }
             }
         }
         catch (error) {
@@ -28427,7 +28429,7 @@ class GithubHelper {
     }
     addComment(comment) {
         return __awaiter(this, void 0, void 0, function* () {
-            // the comment will always be in the base!
+            // if we support forks, then we need to use the base, cause head will be the fork
             const baseOwner = this.payload.pull_request.base.repo.owner.login;
             const baseRepo = this.payload.pull_request.base.repo.name;
             core.info(`owner: ${baseOwner}, repo: ${baseRepo}, issue: ${this.issueNumber}`);

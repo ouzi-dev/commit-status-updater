@@ -18,10 +18,11 @@ export async function run(): Promise<void> {
       core.info('ignoring PR from fork...')
     } else {
       await ghHelper.setStatus(params)
-    }
-
-    if (params.addHoldComment) {
-      await ghHelper.addComment(params.selectedComment)
+      // for now only add comments if it's not a fork or we explicitly say don't ignore forks
+      // we should have a token with permissions in the fork for this
+      if (params.addHoldComment) {
+        await ghHelper.addComment(params.selectedComment)
+      }
     }
   } catch (error) {
     core.setFailed(error.message)
