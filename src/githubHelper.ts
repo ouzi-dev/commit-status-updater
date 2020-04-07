@@ -65,10 +65,13 @@ class GithubHelper {
   }
 
   async addComment(comment: string): Promise<void> {
+    // if we support forks, then we need to use the base, cause head will be the fork
+    const baseOwner = this.payload.pull_request.base.repo.owner.login
+    const baseRepo = this.payload.pull_request.base.repo.name
     try {
       await this.octokit.issues.createComment({
-        owner: this.owner,
-        repo: this.repo,
+        owner: baseOwner,
+        repo: baseRepo,
         issue_number: this.issueNumber,
         body: comment
       })

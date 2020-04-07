@@ -86,6 +86,23 @@ describe('runner tests', () => {
     expect(mockIGithubHelper.addComment).toHaveBeenCalledTimes(0)
   })
 
+  it('run does not set status or comment when it is a fork and add comment enabled', async () => {
+    const params = ({} as unknown) as IParams
+    params.token = 'bleh'
+    params.ignoreForks = true
+    params.addHoldComment = true
+    params.selectedComment = 'my comment'
+    mockInputsHelper.getInputs.mockReturnValue(params)
+    mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
+    mockIGithubHelper.isFork.mockReturnValue(true)
+
+    await runner.run()
+
+    expect(mockUtils.validateEventType).toHaveBeenCalled()
+    expect(mockIGithubHelper.setStatus).toHaveBeenCalledTimes(0)
+    expect(mockIGithubHelper.addComment).toHaveBeenCalledTimes(0)
+  })
+
   it('run sets status if ignore fork false', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'

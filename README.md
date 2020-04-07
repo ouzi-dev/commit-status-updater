@@ -48,7 +48,7 @@ GitHub does not update the status of a commit when running workflow and therefor
   * optional
   * default: "true" 
 
-* addHoldComment: If true the action will add a comment to the pull request. This is useful if you use prow and you get PRs from forks, you can use `/hold` and `/hold cancel` instead of the status check since the token won't have permissions to do that.
+* addHoldComment: If true the action will add a comment to the pull request. This is useful if you use prow, since prow won't detect the github actions, so you can use `/hold` and `/hold cancel` to avoid merging the PR before you want. __Important: this will be disabled for forks if `ignoreForks` is set to true, this is because the default github token won't have permissions to add comments if your PR comes from a fork__
 
   * optional
   * default: "false"
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.0.0
+    - uses: ouzi-dev/commit-status-updater@v1.0.4
 ```
 
 ### Action sets commit to error status without comment
@@ -97,7 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.0.0
+    - uses: ouzi-dev/commit-status-updater@v1.0.4
       with:
         status: "error"
 ```
@@ -114,11 +114,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.0.0
+    - uses: ouzi-dev/commit-status-updater@v1.0.4
       with:
         addHoldComment: "true"
     - if: always()
-      uses: ouzi-dev/commit-status-updater@v1.0.0
+      uses: ouzi-dev/commit-status-updater@v1.0.4
       with:
         addHoldComment: "true"
         status: "${{ job.status }}"
@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.0.0
+    - uses: ouzi-dev/commit-status-updater@v1.0.4
       with:
         status: "pending"
         addHoldComment: "true"
@@ -157,7 +157,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.0.0
+    - uses: ouzi-dev/commit-status-updater@v1.0.4
       with:
         status: "error"
         url: http://myurl.io/
@@ -177,7 +177,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.0.0
+    - uses: ouzi-dev/commit-status-updater@v1.0.4
       with:
         token: "my_custom_token"
         ignoreForks: "false"
