@@ -1,7 +1,7 @@
 import * as github from '@actions/github'
 import * as core from '@actions/core'
-import { WebhookPayloadPullRequest } from '@octokit/webhooks'
-import { IParams } from './paramsHelper'
+import {WebhookPayloadPullRequest} from '@octokit/webhooks'
+import {IParams} from './paramsHelper'
 
 export interface IGithubHelper {
   isFork(): Promise<boolean>
@@ -23,7 +23,7 @@ class GithubHelper {
   private issueNumber
   private octokit
 
-  private constructor() { }
+  private constructor() {}
 
   static async createGithubHelper(token: string): Promise<GithubHelper> {
     const result = new GithubHelper()
@@ -65,7 +65,9 @@ class GithubHelper {
   }
 
   async addComment(comment: string): Promise<void> {
-    core.info(`owner: ${this.owner}, repo: ${this.repo}, issue: ${this.issueNumber}`)
+    core.info(
+      `owner: ${this.owner}, repo: ${this.repo}, issue: ${this.issueNumber}`
+    )
     try {
       await this.octokit.issues.createComment({
         owner: this.owner,
