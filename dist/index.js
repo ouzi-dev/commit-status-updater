@@ -28427,13 +28427,14 @@ class GithubHelper {
     }
     addComment(comment) {
         return __awaiter(this, void 0, void 0, function* () {
-            const headRepo = this.payload.pull_request.head.repo.owner.login;
-            const baseRepo = this.payload.pull_request.base.repo.owner.login;
-            core.info(`headRepo: ${headRepo}, base: ${baseRepo}, issue: ${this.issueNumber}`);
+            // the comment will always be in the base!
+            const baseOwner = this.payload.pull_request.base.repo.owner.login;
+            const baseRepo = this.payload.pull_request.base.repo.name;
+            core.info(`owner: ${baseOwner}, repo: ${baseRepo}, issue: ${this.issueNumber}`);
             try {
                 yield this.octokit.issues.createComment({
-                    owner: this.owner,
-                    repo: this.repo,
+                    owner: baseOwner,
+                    repo: baseRepo,
                     issue_number: this.issueNumber,
                     body: comment
                 });
