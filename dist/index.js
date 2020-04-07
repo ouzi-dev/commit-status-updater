@@ -28432,7 +28432,6 @@ class GithubHelper {
             // if we support forks, then we need to use the base, cause head will be the fork
             const baseOwner = this.payload.pull_request.base.repo.owner.login;
             const baseRepo = this.payload.pull_request.base.repo.name;
-            core.info(`owner: ${baseOwner}, repo: ${baseRepo}, issue: ${this.issueNumber}`);
             try {
                 yield this.octokit.issues.createComment({
                     owner: baseOwner,
