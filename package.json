@@ -58,7 +58,7 @@
     "@semantic-release/exec": "^5.0.0",
     "@semantic-release/github": "^7.0.5",
     "@semantic-release/release-notes-generator": "^9.0.1",
-    "semantic-release": "^17.0.4",
+    "semantic-release": "^17.0.6",
     "env-ci": "^5.0.2"
   },
   "release": {
