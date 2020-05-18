@@ -57,7 +57,7 @@
     "typescript": "^3.8.3",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/exec": "^5.0.0",
-    "@semantic-release/github": "^7.0.5",
+    "@semantic-release/github": "^7.0.6",
     "@semantic-release/release-notes-generator": "^9.0.1",
     "semantic-release": "^17.0.7",
     "env-ci": "^5.0.2"
