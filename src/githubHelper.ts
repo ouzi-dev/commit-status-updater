@@ -1,5 +1,5 @@
-import * as github from '@actions/github'
 import * as core from '@actions/core'
+import * as github from '@actions/github'
 import WebhookPayloadPullRequest from '@octokit/webhooks'
 import {IParams} from './paramsHelper'
 
@@ -32,7 +32,7 @@ class GithubHelper {
   }
 
   private async initialize(token: string): Promise<void> {
-    this.octokit = new github.GitHub(token)
+    this.octokit = github.getOctokit(token)
     this.payload = github.context.payload as WebhookPayloadPullRequest
     this.owner = this.payload.pull_request.head.repo.owner.login
     this.repo = this.payload.pull_request.head.repo.name
