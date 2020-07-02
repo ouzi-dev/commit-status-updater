@@ -12735,7 +12735,7 @@ class GithubHelper {
     setStatus(params) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.octokit.repos.createStatus({
+                yield this.octokit.repos.createCommitStatus({
                     context: params.name,
                     description: params.description,
                     owner: this.owner,
