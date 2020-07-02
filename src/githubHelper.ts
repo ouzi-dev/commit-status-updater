@@ -49,7 +49,7 @@ class GithubHelper {
 
   async setStatus(params: IParams): Promise<void> {
     try {
-      await this.octokit.repos.createStatus({
+      await this.octokit.repos.createCommitStatus({
         context: params.name,
         description: params.description,
         owner: this.owner,
