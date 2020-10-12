@@ -59,7 +59,7 @@
     "jest-circus": "^26.1.0",
     "js-yaml": "^3.14.0",
     "prettier": "^2.0.5",
-    "semantic-release": "^17.1.1",
+    "semantic-release": "^17.2.1",
     "ts-jest": "^26.1.1",
     "typescript": "^3.9.6"
   },
