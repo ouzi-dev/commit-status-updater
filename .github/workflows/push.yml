@@ -25,4 +25,5 @@ jobs:
       - if: always()
         uses: ./
         with:
+          name: "release"
           status: "${{ job.status }}"
