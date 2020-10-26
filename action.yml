@@ -1,9 +1,9 @@
-name: 'commit-status-updater'
-description: 'A simple Github Action that allows us to update the status of the last commit in a pull request'
-author: 'Ouzi, ltd. Ouzi Team <team@ouzi.dev>'
+name: "commit-status-updater"
+description: "A simple Github Action that allows us to update the status of the last commit in a pull request"
+author: "Ouzi, ltd. Ouzi Team <team@ouzi.dev>"
 branding:
-  icon: 'check-circle'
-  color: 'purple'
+  icon: "check-circle"
+  color: "purple"
 inputs:
   token:
     description: >
@@ -40,24 +40,29 @@ inputs:
       This is because the action won't have a token with permissions to add the status
       to the commit. You can disable this, but then you'll have to provide a token
       with enough permissions to add status to the commits in the forks!
+      Will be used only for pull requests.
     default: "true"
     required: true
   addHoldComment:
     description: >
       If true the action will add a comment to the pull request. This is useful if you use prow and you get PRs from forks,
       you can use `/hold` and `/hold cancel` instead of the status check since the token won't have permissions to do that.
+      Will be used only for pull requests.
     default: "false"
   pendingComment:
     description: >
       This is the message to add to the pull request when the status is pending.
+      Will be used only for pull requests.
     default: "/hold"
   successComment:
     description: >
       This is the message to add to the pull request when the status is success.
+      Will be used only for pull requests.
     default: "/hold cancel"
   failComment:
     description: >
       This is the message to add to the pull request when the status is 'failure', 'error' or 'cancelled'.
+      Will be used only for pull requests.
     default: "/hold"
 runs:
   using: node12

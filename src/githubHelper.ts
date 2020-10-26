@@ -1,12 +1,13 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import WebhookPayloadPullRequest from '@octokit/webhooks'
+import {EventPayloads} from '@octokit/webhooks'
 import {IParams} from './paramsHelper'
 
 export interface IGithubHelper {
   isFork(): Promise<boolean>
   setStatus(params: IParams): Promise<void>
   addComment(comment: string): Promise<void>
+  isPullRequest(): Promise<boolean>
 }
 
 export async function CreateGithubHelper(
@@ -22,6 +23,7 @@ class GithubHelper {
   private sha
   private issueNumber
   private octokit
+  private isPR
 
   private constructor() {}
 
@@ -33,11 +35,27 @@ class GithubHelper {
 
   private async initialize(token: string): Promise<void> {
     this.octokit = github.getOctokit(token)
-    this.payload = github.context.payload as WebhookPayloadPullRequest
-    this.owner = this.payload.pull_request.head.repo.owner.login
-    this.repo = this.payload.pull_request.head.repo.name
-    this.sha = this.payload.pull_request.head.sha
-    this.issueNumber = this.payload.pull_request.number
+    if (github.context.eventName === 'pull_request') {
+      this.isPR = true
+      this.payload = github.context
+        .payload as EventPayloads.WebhookPayloadPullRequest
+      this.owner = this.payload.pull_request.head.repo.owner.login
+      this.repo = this.payload.pull_request.head.repo.name
+      this.sha = this.payload.pull_request.head.sha
+      this.issueNumber = this.payload.pull_request.number
+    }
+
+    if (github.context.eventName === 'push') {
+      this.isPR = false
+      this.payload = github.context.payload as EventPayloads.WebhookPayloadPush
+      this.owner = this.payload.repository.owner.login
+      this.repo = this.payload.repository.name
+      this.sha = github.context.sha
+    }
+  }
+
+  async isPullRequest(): Promise<boolean> {
+    return this.isPR
   }
 
   async isFork(): Promise<boolean> {

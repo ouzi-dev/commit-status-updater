@@ -12,6 +12,7 @@ const mockGithubHelper = jest.genMockFromModule('../lib/githubHelper') as any
 mockGithubHelper.getInputs = jest.fn()
 
 const MockIGithubHelper = jest.fn<IGithubHelper, []>(() => ({
+  isPullRequest: jest.fn(),
   isFork: jest.fn(),
   setStatus: jest.fn(),
   addComment: jest.fn()
@@ -35,7 +36,7 @@ describe('runner tests', () => {
     jest.resetModules()
   })
 
-  it('run sets status and comment', async () => {
+  it('on push run sets status', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'
     params.ignoreForks = true
@@ -44,6 +45,25 @@ describe('runner tests', () => {
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(false)
+    mockIGithubHelper.isPullRequest.mockReturnValue(false)
+
+    await runner.run()
+
+    expect(mockUtils.validateEventType).toHaveBeenCalled()
+    expect(mockIGithubHelper.setStatus).toHaveBeenCalledWith(params)
+    expect(mockIGithubHelper.addComment).toHaveBeenCalledTimes(0)
+  })
+
+  it('on PR run sets status and comment', async () => {
+    const params = ({} as unknown) as IParams
+    params.token = 'bleh'
+    params.ignoreForks = true
+    params.addHoldComment = true
+    params.selectedComment = 'my comment'
+    mockInputsHelper.getInputs.mockReturnValue(params)
+    mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
+    mockIGithubHelper.isFork.mockReturnValue(false)
+    mockIGithubHelper.isPullRequest.mockReturnValue(true)
 
     await runner.run()
 
@@ -52,7 +72,7 @@ describe('runner tests', () => {
     expect(mockIGithubHelper.addComment).toHaveBeenCalledWith('my comment')
   })
 
-  it('run sets status and no comment', async () => {
+  it('on PR run sets status and no comment', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'
     params.ignoreForks = true
@@ -61,6 +81,7 @@ describe('runner tests', () => {
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(false)
+    mockIGithubHelper.isPullRequest.mockReturnValue(true)
 
     await runner.run()
 
@@ -69,7 +90,7 @@ describe('runner tests', () => {
     expect(mockIGithubHelper.addComment).toHaveBeenCalledTimes(0)
   })
 
-  it('run does not set status or comment', async () => {
+  it('on PR run does not set status or comment', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'
     params.ignoreForks = true
@@ -78,6 +99,7 @@ describe('runner tests', () => {
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(true)
+    mockIGithubHelper.isPullRequest.mockReturnValue(true)
 
     await runner.run()
 
@@ -86,7 +108,7 @@ describe('runner tests', () => {
     expect(mockIGithubHelper.addComment).toHaveBeenCalledTimes(0)
   })
 
-  it('run does not set status or comment when it is a fork and add comment enabled', async () => {
+  it('on PR run does not set status or comment when it is a fork and add comment enabled', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'
     params.ignoreForks = true
@@ -95,6 +117,7 @@ describe('runner tests', () => {
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
     mockIGithubHelper.isFork.mockReturnValue(true)
+    mockIGithubHelper.isPullRequest.mockReturnValue(true)
 
     await runner.run()
 
@@ -103,7 +126,7 @@ describe('runner tests', () => {
     expect(mockIGithubHelper.addComment).toHaveBeenCalledTimes(0)
   })
 
-  it('run sets status if ignore fork false', async () => {
+  it('on PR run sets status if ignore fork false', async () => {
     const params = ({} as unknown) as IParams
     params.token = 'bleh'
     params.ignoreForks = false
@@ -111,6 +134,7 @@ describe('runner tests', () => {
     params.selectedComment = 'my comment'
     mockInputsHelper.getInputs.mockReturnValue(params)
     mockGithubHelper.CreateGithubHelper.mockReturnValue(mockIGithubHelper)
+    mockIGithubHelper.isPullRequest.mockReturnValue(true)
 
     await runner.run()
 
