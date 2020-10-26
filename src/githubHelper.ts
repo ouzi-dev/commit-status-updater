@@ -1,8 +1,6 @@
-/*eslint-disable import/no-duplicates*/
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import WebhookPayloadPullRequest from '@octokit/webhooks'
-import WebhookPayloadPush from '@octokit/webhooks'
+import {EventPayloads} from '@octokit/webhooks'
 import {IParams} from './paramsHelper'
 
 export interface IGithubHelper {
@@ -39,7 +37,8 @@ class GithubHelper {
     this.octokit = github.getOctokit(token)
     if (github.context.eventName === 'pull_request') {
       this.isPR = true
-      this.payload = github.context.payload as WebhookPayloadPullRequest
+      this.payload = github.context
+        .payload as EventPayloads.WebhookPayloadPullRequest
       this.owner = this.payload.pull_request.head.repo.owner.login
       this.repo = this.payload.pull_request.head.repo.name
       this.sha = this.payload.pull_request.head.sha
@@ -48,7 +47,7 @@ class GithubHelper {
 
     if (github.context.eventName === 'push') {
       this.isPR = false
-      this.payload = github.context.payload as WebhookPayloadPush
+      this.payload = github.context.payload as EventPayloads.WebhookPayloadPush
       this.owner = this.payload.repository.owner.login
       this.repo = this.payload.repository.name
       this.sha = github.context.sha
