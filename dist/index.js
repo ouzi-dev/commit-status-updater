@@ -1364,16 +1364,21 @@ function run() {
             yield utils.validateEventType();
             const params = yield inputsHelper.getInputs();
             const ghHelper = yield githubHelper.CreateGithubHelper(params.token);
-            if (params.ignoreForks && (yield ghHelper.isFork())) {
-                core.info('ignoring PR from fork...');
+            if (yield ghHelper.isPullRequest()) {
+                if (params.ignoreForks && (yield ghHelper.isFork())) {
+                    core.info('ignoring PR from fork...');
+                }
+                else {
+                    yield ghHelper.setStatus(params);
+                    // for now only add comments if it's not a fork or we explicitly say don't ignore forks
+                    // we should have a token with permissions in the fork for this
+                    if (params.addHoldComment) {
+                        yield ghHelper.addComment(params.selectedComment);
+                    }
+                }
             }
             else {
                 yield ghHelper.setStatus(params);
-                // for now only add comments if it's not a fork or we explicitly say don't ignore forks
-                // we should have a token with permissions in the fork for this
-                if (params.addHoldComment) {
-                    yield ghHelper.addComment(params.selectedComment);
-                }
             }
         }
         catch (error) {
@@ -8969,8 +8974,9 @@ exports.validateEventType = void 0;
 const github = __importStar(__webpack_require__(469));
 function validateEventType() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (github.context.eventName !== 'pull_request') {
-            throw new Error('Error, action only works for pull_request events!');
+        if (github.context.eventName !== 'pull_request' &&
+            github.context.eventName !== 'push') {
+            throw new Error('Error, action only works for pull_request or push events!');
         }
     });
 }
@@ -12698,6 +12704,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateGithubHelper = void 0;
+/*eslint-disable import/no-duplicates*/
 const core = __importStar(__webpack_require__(470));
 const github = __importStar(__webpack_require__(469));
 function CreateGithubHelper(token) {
@@ -12718,11 +12725,26 @@ class GithubHelper {
     initialize(token) {
         return __awaiter(this, void 0, void 0, function* () {
             this.octokit = github.getOctokit(token);
-            this.payload = github.context.payload;
-            this.owner = this.payload.pull_request.head.repo.owner.login;
-            this.repo = this.payload.pull_request.head.repo.name;
-            this.sha = this.payload.pull_request.head.sha;
-            this.issueNumber = this.payload.pull_request.number;
+            if (github.context.eventName === 'pull_request') {
+                this.isPR = true;
+                this.payload = github.context.payload;
+                this.owner = this.payload.pull_request.head.repo.owner.login;
+                this.repo = this.payload.pull_request.head.repo.name;
+                this.sha = this.payload.pull_request.head.sha;
+                this.issueNumber = this.payload.pull_request.number;
+            }
+            if (github.context.eventName === 'push') {
+                this.isPR = false;
+                this.payload = github.context.payload;
+                this.owner = this.payload.repository.owner.login;
+                this.repo = this.payload.repository.name;
+                this.sha = github.context.sha;
+            }
+        });
+    }
+    isPullRequest() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.isPR;
         });
     }
     isFork() {

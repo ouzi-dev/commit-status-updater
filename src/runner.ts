@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as inputsHelper from './inputsHelper'
 import * as githubHelper from './githubHelper'
 import * as utils from './utils'
-import { IParams } from './paramsHelper'
+import {IParams} from './paramsHelper'
 
 export async function run(): Promise<void> {
   try {

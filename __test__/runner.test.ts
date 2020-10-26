@@ -1,6 +1,6 @@
 import * as assert from 'assert'
-import { IGithubHelper } from '../lib/githubHelper'
-import { IParams } from '../lib/paramsHelper'
+import {IGithubHelper} from '../lib/githubHelper'
+import {IParams} from '../lib/paramsHelper'
 
 let runner: any
 
@@ -30,7 +30,7 @@ describe('runner tests', () => {
     runner = require('../lib/runner')
   })
 
-  beforeEach(() => { })
+  beforeEach(() => {})
 
   afterAll(() => {
     jest.resetModules()
