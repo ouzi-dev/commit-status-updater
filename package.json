@@ -36,7 +36,7 @@
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
     "@actions/http-client": ">=1.0.9",
-    "@octokit/webhooks": "^7.15.0",
+    "@octokit/webhooks": "^9.6.3",
     "npm-check-updates": "^9.2.2",
     "uuid": "^8.3.1"
   },
