@@ -179,7 +179,7 @@ jobs:
         status: "${{ job.status }}"
 ```
 
-### Action with custom hold comments
+### Action with custom hold comments
 
 ```
 name: Test
@@ -200,7 +200,7 @@ jobs:
         failComment: "action failed!"
 ```
  
-### Action no comments, set commit to "error" status and set url, description and specific name
+### Action no comments, set commit to "error" status and set url, description and specific name
 
 ```
 name: Test
