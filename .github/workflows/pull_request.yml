@@ -2,9 +2,10 @@ name: PR Build and test
 
 on: [pull_request]
 
+env:
+  ACTIONS_STEP_DEBUG: true
+
 jobs:
-  env:
-    ACTIONS_STEP_DEBUG: true
   build:
     runs-on: ubuntu-latest
     steps:
