@@ -74,9 +74,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: ouzi-dev/commit-status-updater@v1.1.0
       with:
         name: "name of my status check"
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
 ```
 
 ### Action sets push commit to pending status on start, and updates check at the end of the workflow
