@@ -77,7 +77,7 @@ class GithubHelper {
       })
       core.info(`Updated build status: ${params.status}`)
     } catch (error) {
-      throw new Error(`error while setting context status: ${error.message}`)
+      throw new Error(`error while setting context status: ${error}`)
     }
   }
 
@@ -95,7 +95,7 @@ class GithubHelper {
       core.info(`Comment added to pull request`)
     } catch (error) {
       throw new Error(
-        `error while adding comment to pull request: ${error.message}`
+        `error while adding comment to pull request: ${error}`
       )
     }
   }
