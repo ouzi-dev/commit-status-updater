@@ -66,7 +66,7 @@ class GithubHelper {
 
   async setStatus(params: IParams): Promise<void> {
     try {
-      core.info(`setting commit status: 
+      core.debug(`setting commit status: 
         context: ${params.name}
         description: ${params.description}
         owner: ${this.owner}
