@@ -92,6 +92,15 @@ class GithubHelper {
     setStatus(params) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                core.debug(`setting commit status: 
+        context: ${params.name}
+        description: ${params.description}
+        owner: ${this.owner}
+        repo: ${this.repo}
+        sha: ${this.sha}
+        state: ${params.status}
+        target_url: ${params.url}
+        `);
                 yield this.octokit.repos.createCommitStatus({
                     context: params.name,
                     description: params.description,
