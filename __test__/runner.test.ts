@@ -37,7 +37,7 @@ describe('runner tests', () => {
   })
 
   it('on push run sets status', async () => {
-    const params = ({} as unknown) as IParams
+    const params = {} as unknown as IParams
     params.token = 'bleh'
     params.ignoreForks = true
     params.addHoldComment = true
@@ -55,7 +55,7 @@ describe('runner tests', () => {
   })
 
   it('on PR run sets status and comment', async () => {
-    const params = ({} as unknown) as IParams
+    const params = {} as unknown as IParams
     params.token = 'bleh'
     params.ignoreForks = true
     params.addHoldComment = true
@@ -73,7 +73,7 @@ describe('runner tests', () => {
   })
 
   it('on PR run sets status and no comment', async () => {
-    const params = ({} as unknown) as IParams
+    const params = {} as unknown as IParams
     params.token = 'bleh'
     params.ignoreForks = true
     params.addHoldComment = false
@@ -91,7 +91,7 @@ describe('runner tests', () => {
   })
 
   it('on PR run does not set status or comment', async () => {
-    const params = ({} as unknown) as IParams
+    const params = {} as unknown as IParams
     params.token = 'bleh'
     params.ignoreForks = true
     params.addHoldComment = false
@@ -109,7 +109,7 @@ describe('runner tests', () => {
   })
 
   it('on PR run does not set status or comment when it is a fork and add comment enabled', async () => {
-    const params = ({} as unknown) as IParams
+    const params = {} as unknown as IParams
     params.token = 'bleh'
     params.ignoreForks = true
     params.addHoldComment = true
@@ -127,7 +127,7 @@ describe('runner tests', () => {
   })
 
   it('on PR run sets status if ignore fork false', async () => {
-    const params = ({} as unknown) as IParams
+    const params = {} as unknown as IParams
     params.token = 'bleh'
     params.ignoreForks = false
     params.addHoldComment = true

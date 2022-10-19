@@ -10,9 +10,8 @@ export async function run(): Promise<void> {
 
     const params: IParams = await inputsHelper.getInputs()
 
-    const ghHelper: githubHelper.IGithubHelper = await githubHelper.CreateGithubHelper(
-      params.token
-    )
+    const ghHelper: githubHelper.IGithubHelper =
+      await githubHelper.CreateGithubHelper(params.token)
 
     if (await ghHelper.isPullRequest()) {
       if (params.ignoreForks && (await ghHelper.isFork())) {
@@ -29,6 +28,6 @@ export async function run(): Promise<void> {
       await ghHelper.setStatus(params)
     }
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed((error as Error).message)
   }
 }

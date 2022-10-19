@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {EventPayloads} from '@octokit/webhooks'
 import {IParams} from './paramsHelper'
 
 export interface IGithubHelper {
@@ -37,8 +36,7 @@ class GithubHelper {
     this.octokit = github.getOctokit(token)
     if (github.context.eventName === 'pull_request') {
       this.isPR = true
-      this.payload = github.context
-        .payload as EventPayloads.WebhookPayloadPullRequest
+      this.payload = github.context.payload
       this.owner = this.payload.pull_request.head.repo.owner.login
       this.repo = this.payload.pull_request.head.repo.name
       this.sha = this.payload.pull_request.head.sha
@@ -47,7 +45,7 @@ class GithubHelper {
 
     if (github.context.eventName === 'push') {
       this.isPR = false
-      this.payload = github.context.payload as EventPayloads.WebhookPayloadPush
+      this.payload = github.context.payload
       this.owner = this.payload.repository.owner.login
       this.repo = this.payload.repository.name
       this.sha = github.context.sha
@@ -78,7 +76,9 @@ class GithubHelper {
       })
       core.info(`Updated build status: ${params.status}`)
     } catch (error) {
-      throw new Error(`error while setting context status: ${error.message}`)
+      throw new Error(
+        `error while setting context status: ${(error as Error).message}`
+      )
     }
   }
 
@@ -96,7 +96,9 @@ class GithubHelper {
       core.info(`Comment added to pull request`)
     } catch (error) {
       throw new Error(
-        `error while adding comment to pull request: ${error.message}`
+        `error while adding comment to pull request: ${
+          (error as Error).message
+        }`
       )
     }
   }

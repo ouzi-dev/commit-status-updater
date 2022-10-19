@@ -13,6 +13,8 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "filenames/match-regex": "off",
+    "i18n-text/no-en": "off",
     "object-shorthand": [
       2,
       "consistent"

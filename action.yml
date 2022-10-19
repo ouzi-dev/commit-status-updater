@@ -65,5 +65,5 @@ inputs:
       Will be used only for pull requests.
     default: "/hold"
 runs:
-  using: node12
+  using: node16
   main: dist/index.js
