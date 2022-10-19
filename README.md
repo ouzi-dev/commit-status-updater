@@ -15,63 +15,36 @@ Currently the action supports `pull_request` and `push` events:
 
 ## Input Parameters
 
-* token: Auth token used to add status commits
-  
-  * required
-  * default: "${ github.token }"
-  
-* name: The Name of the status check to add to the commit
-  * required
-  * default: "GithubActions - ${GITHUB_WORKFLOW}"
-  
-* status: Commit or job status, based on this the action will set the correct status in the commit: Accepted values are: `error`, `failure`, `pending`, `success` and `cancelled`.
+| Name | Required | Description | Default | Accepted values |
+|---|---|---|---|---|
+| `token` | :heavy_check_mark: | Auth token used to add status commits | `${ github.token }` | `^[0-9a-f]{40}$` |
+| `name` | :heavy_check_mark: | Name of the status check to add to the commit | `GithubActions - ${GITHUB_WORKFLOW}` | Any string |
+| `status` | :heavy_check_mark: | Commit or job status, based on this the action will set the correct status in the commit. See below for details. | `pending` | `error`, `failure`, `pending`, `success` and `cancelled` |
+| `url` |  | URL for the status check | `""` | Any string |
+| `description` |  | Description for the status check | `""` | Any string |
 
-  If the passed status is `pending` it will set status commit `pending`.
+### `status`
 
-  If the passed status is `failure` or `cancelled` it will set status commit `failure`.
+If set to `pending` it will set status commit `pending`.
 
-  If the passed status is `success` it will set status commit `success`.
+If set to `failure` or `cancelled` it will set status commit `failure`.
 
-  If the passed status is `error` it will set status commit `error`.
+If set to `success` it will set status commit `success`.
 
-  * required
-  * default: "pending"
-  
-* url: URL for the status check.
+If set to `error` it will set status commit `error`.
 
-  * optional
-  * default: ""
+## Input Parameters specific to `pull_request` event
 
-* description: Description for the status check.
+_These parameters are all optional and are used only for pull requests_
 
-  * optional
-  * default: ""
+| Name | Description |
+|---|---|
+| `ignoreForks` | Default is `true`. If the pull request is from a fork the action won't add a status by default. This is because the action won't have a token with permissions to add the status to the commit. You can disable this, but then you'll have to provide a token with enough permissions to add status to the commits in the forks! |
+| `addHoldComment` | Default is `false`. If `true` the action will add a comment to the pull request. This is useful if you use prow, since prow won't detect the GitHub actions, so you can use `/hold` and `/hold cancel` to avoid merging the PR before you want. __Important: this will be disabled for forks if `ignoreForks` is set to `true`, this is because the default GitHub token won't have permissions to add comments if your PR comes from a fork.__ |
+| `pendingComment` | Default is `/hold`. This is the message to add to the pull request when the status is `pending`. |
+| `successComment` | Default is `/hold cancel`. This is the message to add to the pull request when the status is `success`. |
+| `failComment` | Default is `/hold`. This is the message to add to the pull request when the status is `failure`, `error` or `cancelled`. |
 
-* ignoreForks: If the pull request is from a fork the action won't add a status by default. This is because the action won't have a token with permissions to add the status to the commit. You can disable this, but then you'll have to provide a token with enough permissions to add status to the commits in the forks! __Will be used only for pull requests.__
-
-  * optional
-  * default: "true" 
-
-* addHoldComment: If true the action will add a comment to the pull request. This is useful if you use prow, since prow won't detect the github actions, so you can use `/hold` and `/hold cancel` to avoid merging the PR before you want. __Important: this will be disabled for forks if `ignoreForks` is set to true, this is because the default github token won't have permissions to add comments if your PR comes from a fork. Will be used only for pull requests.__
-
-  * optional
-  * default: "false"
-
-* pendingComment: This is the message to add to the pull request when the status is `pending`. __Will be used only for pull requests.__
-
-  * optional
-  * default: "/hold"
-
-* successComment: This is the message to add to the pull request when the status is `success`. __Will be used only for pull requests.__
-
-  * optional
-  * default: "/hold cancel"
-
-* failComment: This is the message to add to the pull request when the status is `failure`, `error` or `cancelled`.__Will be used only for pull requests.__
-
-  * optional
-  * default: "/hold"
-  
 ## Examples 
 
 ### Action sets push commit to pending status
