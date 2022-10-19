@@ -213,7 +213,7 @@ jobs:
 
 ## Integration with Prow
 
-An example is [Prow](https://github.com/kubernetes/test-infra/tree/master/prow) which uses the Github Status API to read the status of a given commit. 
+An example is [Prow](https://github.com/kubernetes/test-infra/tree/master/prow#readme) which uses the Github Status API to read the status of a given commit. 
 Using this actions you can tell tide to not skip optional contexts and effectively wait for a GitHub Workflow to pass before merging.
 
 ### Example with Tide
