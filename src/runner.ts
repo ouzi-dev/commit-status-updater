@@ -28,6 +28,6 @@ export async function run(): Promise<void> {
       await ghHelper.setStatus(params)
     }
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed((error as Error).message)
   }
 }

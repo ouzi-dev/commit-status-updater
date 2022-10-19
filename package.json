@@ -36,6 +36,8 @@
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
     "@actions/http-client": ">=2.0.1",
+    "@octokit/webhooks": "^10.3.0",
+    "@octokit/webhooks-types": "^6.5.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
@@ -43,8 +45,6 @@
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/github": "^8.0.6",
     "@semantic-release/release-notes-generator": "^10.0.3",
-    "@octokit/webhooks": "^10.3.0",
-    "@octokit/webhooks-types": "^6.5.0",
     "@types/jest": "^29.2.0",
     "@types/node": "^18.11.2",
     "@types/uuid": "^8.3.4",
