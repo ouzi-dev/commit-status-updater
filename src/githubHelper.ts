@@ -67,6 +67,15 @@ class GithubHelper {
 
   async setStatus(params: IParams): Promise<void> {
     try {
+      console.log(`params:
+  context: ${params.name},
+  description: ${params.description},
+  owner: ${this.owner},
+  repo: ${this.repo},
+  sha: ${this.sha},
+  state: ${params.status},
+  target_url: ${params.url}
+      `)
       await this.octokit.repos.createCommitStatus({
         context: params.name,
         description: params.description,

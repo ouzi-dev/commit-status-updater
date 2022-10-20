@@ -93,6 +93,15 @@ class GithubHelper {
     setStatus(params) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(`params:
+  context: ${params.name},
+  description: ${params.description},
+  owner: ${this.owner},
+  repo: ${this.repo},
+  sha: ${this.sha},
+  state: ${params.status},
+  target_url: ${params.url}
+      `);
                 yield this.octokit.repos.createCommitStatus({
                     context: params.name,
                     description: params.description,
@@ -381,7 +390,6 @@ const utils = __importStar(__nccwpck_require__(918));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log('blah');
             yield utils.validateEventType();
             const params = yield inputsHelper.getInputs();
             const ghHelper = yield githubHelper.CreateGithubHelper(params.token);
