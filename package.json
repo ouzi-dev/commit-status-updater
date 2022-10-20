@@ -92,6 +92,12 @@
       ],
       "@semantic-release/release-notes-generator",
       [
+        "@semantic-release/exec",
+        {
+          "successCmd": "make tag-major VERSION=v${nextRelease.version}"
+        }
+      ],
+      [
         "@semantic-release/github",
         {
           "successComment": "This ${issue.pull_request ? 'pull request' : 'issue'} is included in version ${nextRelease.version}",

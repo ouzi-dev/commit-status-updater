@@ -65,8 +65,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
 ```
 
 ### Action sets push commit to pending status with specific permissions
@@ -83,8 +83,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
 ```
 
 
@@ -99,8 +99,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
       with:
         name: "name of my status check"
 ```
@@ -116,10 +116,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
     - if: always()
-      uses: ouzi-dev/commit-status-updater@v1.1.0
+      uses: ouzi-dev/commit-status-updater@v2
       with:
         status: "${{ job.status }}"
 ```
@@ -135,8 +135,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
 ```
 
 ### Action sets pull request commit to error status without comment
@@ -150,8 +150,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
       with:
         status: "error"
 ```
@@ -167,12 +167,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
       with:
         addHoldComment: "true"
     - if: always()
-      uses: ouzi-dev/commit-status-updater@v1.1.0
+      uses: ouzi-dev/commit-status-updater@v2
       with:
         addHoldComment: "true"
         status: "${{ job.status }}"
@@ -193,12 +193,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
       with:
         addHoldComment: "true"
     - if: always()
-      uses: ouzi-dev/commit-status-updater@v1.1.0
+      uses: ouzi-dev/commit-status-updater@v2
       with:
         addHoldComment: "true"
         status: "${{ job.status }}"
@@ -215,8 +215,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
       with:
         status: "pending"
         addHoldComment: "true"
@@ -236,8 +236,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
       with:
         status: "error"
         url: http://myurl.io/
@@ -256,8 +256,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
+    - uses: actions/checkout@v3
+    - uses: ouzi-dev/commit-status-updater@v2
       with:
         token: "my_custom_token"
         ignoreForks: "false"
