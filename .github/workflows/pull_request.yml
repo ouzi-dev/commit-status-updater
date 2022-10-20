@@ -4,6 +4,7 @@ on: [pull_request]
 
 permissions: 
   statuses: write
+  pull-requests: write
 
 
   # actions: read|write|none
