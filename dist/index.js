@@ -92,15 +92,6 @@ class GithubHelper {
     setStatus(params) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(`params:
-  context: ${params.name},
-  description: ${params.description},
-  owner: ${this.owner},
-  repo: ${this.repo},
-  sha: ${this.sha},
-  state: ${params.status},
-  target_url: ${params.url}
-      `);
                 const octokit = (0, github_1.getOctokit)(params.token);
                 yield octokit.rest.repos.createCommitStatus({
                     context: params.name,
