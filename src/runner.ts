@@ -6,6 +6,7 @@ import {IParams} from './paramsHelper'
 
 export async function run(): Promise<void> {
   try {
+    console.log('blah')
     await utils.validateEventType()
 
     const params: IParams = await inputsHelper.getInputs()

@@ -4,7 +4,8 @@
     "module": "commonjs",
     "lib": [
       "es6",
-      "es2018"
+      "es2018",
+      "esnext"
     ],
     "outDir": "./lib",
     "rootDir": "./src",
