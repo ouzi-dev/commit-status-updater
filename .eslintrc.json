@@ -13,6 +13,9 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "filenames/match-regex": "off",
+    "i18n-text/no-en": "off",
+    "no-console": "off",
     "object-shorthand": [
       2,
       "consistent"

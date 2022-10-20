@@ -23,7 +23,7 @@ async function validateString(str: string, paramName: string): Promise<void> {
 }
 
 export async function getInputs(): Promise<paramsHelper.IParams> {
-  const result = ({} as unknown) as paramsHelper.IParams
+  const result = {} as unknown as paramsHelper.IParams
 
   result.token = core.getInput(TOKEN_PARAM)
 

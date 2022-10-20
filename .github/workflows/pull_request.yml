@@ -2,11 +2,15 @@ name: PR Build and test
 
 on: [pull_request]
 
+permissions: 
+  statuses: write
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./
         with:
           addHoldComment: "true"
@@ -23,3 +27,4 @@ jobs:
         with:
           addHoldComment: "true"
           status: "${{ job.status }}"
+

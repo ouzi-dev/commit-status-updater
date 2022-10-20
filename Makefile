@@ -45,3 +45,16 @@ install-npm-check-updates:
 update-dependencies: install-npm-check-updates
 	ncu -u
 	npm install
+
+.PHONY: tag-major
+tag-major: check-version
+	$(eval TAG := $(call split-by-dot,$(VERSION),1))
+	@echo "Tagging major version $(TAG)"
+	git tag -f $(TAG)
+	git push -f origin $(TAG)
+
+.PHONY: check-version
+check-version:
+ifndef VERSION
+	$(error VERSION not defined)
+endif 

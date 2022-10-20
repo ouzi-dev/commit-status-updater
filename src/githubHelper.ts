@@ -1,56 +1,56 @@
 import * as core from '@actions/core'
-import * as github from '@actions/github'
-import {EventPayloads} from '@octokit/webhooks'
+import {context, getOctokit} from '@actions/github'
 import {IParams} from './paramsHelper'
 
 export interface IGithubHelper {
   isFork(): Promise<boolean>
   setStatus(params: IParams): Promise<void>
-  addComment(comment: string): Promise<void>
+  addComment(token: string, comment: string): Promise<void>
   isPullRequest(): Promise<boolean>
 }
 
-export async function CreateGithubHelper(
-  token: string
-): Promise<IGithubHelper> {
-  return await GithubHelper.createGithubHelper(token)
+export async function CreateGithubHelper(): Promise<IGithubHelper> {
+  return await GithubHelper.createGithubHelper()
 }
 
 class GithubHelper {
-  private payload
   private owner
   private repo
   private sha
   private issueNumber
   private octokit
   private isPR
+  private baseRepo
+  private headRepo
+  private baseOwner
+  private baseRepoName
 
   private constructor() {}
 
-  static async createGithubHelper(token: string): Promise<GithubHelper> {
+  static async createGithubHelper(): Promise<GithubHelper> {
     const result = new GithubHelper()
-    await result.initialize(token)
+    await result.initialize()
     return result
   }
 
-  private async initialize(token: string): Promise<void> {
-    this.octokit = github.getOctokit(token)
-    if (github.context.eventName === 'pull_request') {
+  private async initialize(): Promise<void> {
+    if (context.eventName === 'pull_request') {
       this.isPR = true
-      this.payload = github.context
-        .payload as EventPayloads.WebhookPayloadPullRequest
-      this.owner = this.payload.pull_request.head.repo.owner.login
-      this.repo = this.payload.pull_request.head.repo.name
-      this.sha = this.payload.pull_request.head.sha
-      this.issueNumber = this.payload.pull_request.number
+      this.owner = context.payload?.pull_request?.head?.repo?.owner?.login
+      this.repo = context.payload?.pull_request?.head?.repo?.name
+      this.sha = context.payload?.pull_request?.head?.sha
+      this.issueNumber = context.payload?.pull_request?.number
+      this.baseRepo = context.payload?.pull_request?.base?.repo?.full_name
+      this.headRepo = context.payload?.pull_request?.head?.repo?.full_name
+      this.baseOwner = context.payload?.pull_request?.base?.repo?.owner?.login
+      this.baseRepoName = context.payload?.pull_request?.base?.repo?.name
     }
 
-    if (github.context.eventName === 'push') {
+    if (context.eventName === 'push') {
       this.isPR = false
-      this.payload = github.context.payload as EventPayloads.WebhookPayloadPush
-      this.owner = this.payload.repository.owner.login
-      this.repo = this.payload.repository.name
-      this.sha = github.context.sha
+      this.owner = context.payload?.repository?.owner?.login
+      this.repo = context.payload?.repository?.name
+      this.sha = context.sha
     }
   }
 
@@ -59,15 +59,13 @@ class GithubHelper {
   }
 
   async isFork(): Promise<boolean> {
-    const baseRepo = this.payload.pull_request.base.repo.full_name
-    const headRepo = this.payload.pull_request.head.repo.full_name
-
-    return baseRepo !== headRepo
+    return this.baseRepo !== this.headRepo
   }
 
   async setStatus(params: IParams): Promise<void> {
     try {
-      await this.octokit.repos.createCommitStatus({
+      const octokit = getOctokit(params.token)
+      await octokit.rest.repos.createCommitStatus({
         context: params.name,
         description: params.description,
         owner: this.owner,
@@ -78,25 +76,28 @@ class GithubHelper {
       })
       core.info(`Updated build status: ${params.status}`)
     } catch (error) {
-      throw new Error(`error while setting context status: ${error.message}`)
+      throw new Error(
+        `error while setting context status: ${(error as Error).message}`
+      )
     }
   }
 
-  async addComment(comment: string): Promise<void> {
+  async addComment(token: string, comment: string): Promise<void> {
     // if we support forks, then we need to use the base, cause head will be the fork
-    const baseOwner = this.payload.pull_request.base.repo.owner.login
-    const baseRepo = this.payload.pull_request.base.repo.name
     try {
-      await this.octokit.issues.createComment({
-        owner: baseOwner,
-        repo: baseRepo,
+      const octokit = getOctokit(token)
+      await octokit.rest.issues.createComment({
+        owner: this.baseOwner,
+        repo: this.baseRepoName,
         issue_number: this.issueNumber,
         body: comment
       })
       core.info(`Comment added to pull request`)
     } catch (error) {
       throw new Error(
-        `error while adding comment to pull request: ${error.message}`
+        `error while adding comment to pull request: ${
+          (error as Error).message
+        }`
       )
     }
   }
