@@ -11,7 +11,7 @@ export async function run(): Promise<void> {
     const params: IParams = await inputsHelper.getInputs()
 
     const ghHelper: githubHelper.IGithubHelper =
-      await githubHelper.CreateGithubHelper(params.token)
+      await githubHelper.CreateGithubHelper()
 
     if (await ghHelper.isPullRequest()) {
       if (params.ignoreForks && (await ghHelper.isFork())) {
@@ -21,7 +21,7 @@ export async function run(): Promise<void> {
         // for now only add comments if it's not a fork or we explicitly say don't ignore forks
         // we should have a token with permissions in the fork for this
         if (params.addHoldComment) {
-          await ghHelper.addComment(params.selectedComment)
+          await ghHelper.addComment(params.token, params.selectedComment)
         }
       }
     } else {

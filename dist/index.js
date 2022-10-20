@@ -42,25 +42,24 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateGithubHelper = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
-function CreateGithubHelper(token) {
+function CreateGithubHelper() {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield GithubHelper.createGithubHelper(token);
+        return yield GithubHelper.createGithubHelper();
     });
 }
 exports.CreateGithubHelper = CreateGithubHelper;
 class GithubHelper {
     constructor() { }
-    static createGithubHelper(token) {
+    static createGithubHelper() {
         return __awaiter(this, void 0, void 0, function* () {
             const result = new GithubHelper();
-            yield result.initialize(token);
+            yield result.initialize();
             return result;
         });
     }
-    initialize(token) {
+    initialize() {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11;
         return __awaiter(this, void 0, void 0, function* () {
-            this.octokit = (0, github_1.getOctokit)(token);
             if (github_1.context.eventName === 'pull_request') {
                 this.isPR = true;
                 this.owner = (_e = (_d = (_c = (_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.pull_request) === null || _b === void 0 ? void 0 : _b.head) === null || _c === void 0 ? void 0 : _c.repo) === null || _d === void 0 ? void 0 : _d.owner) === null || _e === void 0 ? void 0 : _e.login;
@@ -102,7 +101,8 @@ class GithubHelper {
   state: ${params.status},
   target_url: ${params.url}
       `);
-                yield this.octokit.rest.repos.createCommitStatus({
+                const octokit = (0, github_1.getOctokit)(params.token);
+                yield octokit.rest.repos.createCommitStatus({
                     context: params.name,
                     description: params.description,
                     owner: this.owner,
@@ -118,11 +118,12 @@ class GithubHelper {
             }
         });
     }
-    addComment(comment) {
+    addComment(token, comment) {
         return __awaiter(this, void 0, void 0, function* () {
             // if we support forks, then we need to use the base, cause head will be the fork
             try {
-                yield this.octokit.issues.createComment({
+                const octokit = (0, github_1.getOctokit)(token);
+                yield octokit.rest.issues.createComment({
                     owner: this.baseOwner,
                     repo: this.baseRepoName,
                     issue_number: this.issueNumber,
@@ -392,7 +393,7 @@ function run() {
         try {
             yield utils.validateEventType();
             const params = yield inputsHelper.getInputs();
-            const ghHelper = yield githubHelper.CreateGithubHelper(params.token);
+            const ghHelper = yield githubHelper.CreateGithubHelper();
             if (yield ghHelper.isPullRequest()) {
                 if (params.ignoreForks && (yield ghHelper.isFork())) {
                     core.info('ignoring PR from fork...');
@@ -402,7 +403,7 @@ function run() {
                     // for now only add comments if it's not a fork or we explicitly say don't ignore forks
                     // we should have a token with permissions in the fork for this
                     if (params.addHoldComment) {
-                        yield ghHelper.addComment(params.selectedComment);
+                        yield ghHelper.addComment(params.token, params.selectedComment);
                     }
                 }
             }

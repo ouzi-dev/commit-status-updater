@@ -5,14 +5,12 @@ import {IParams} from './paramsHelper'
 export interface IGithubHelper {
   isFork(): Promise<boolean>
   setStatus(params: IParams): Promise<void>
-  addComment(comment: string): Promise<void>
+  addComment(token: string, comment: string): Promise<void>
   isPullRequest(): Promise<boolean>
 }
 
-export async function CreateGithubHelper(
-  token: string
-): Promise<IGithubHelper> {
-  return await GithubHelper.createGithubHelper(token)
+export async function CreateGithubHelper(): Promise<IGithubHelper> {
+  return await GithubHelper.createGithubHelper()
 }
 
 class GithubHelper {
@@ -29,14 +27,13 @@ class GithubHelper {
 
   private constructor() {}
 
-  static async createGithubHelper(token: string): Promise<GithubHelper> {
+  static async createGithubHelper(): Promise<GithubHelper> {
     const result = new GithubHelper()
-    await result.initialize(token)
+    await result.initialize()
     return result
   }
 
-  private async initialize(token: string): Promise<void> {
-    this.octokit = getOctokit(token)
+  private async initialize(): Promise<void> {
     if (context.eventName === 'pull_request') {
       this.isPR = true
       this.owner = context.payload?.pull_request?.head?.repo?.owner?.login
@@ -76,7 +73,8 @@ class GithubHelper {
   state: ${params.status},
   target_url: ${params.url}
       `)
-      await this.octokit.rest.repos.createCommitStatus({
+      const octokit = getOctokit(params.token)
+      await octokit.rest.repos.createCommitStatus({
         context: params.name,
         description: params.description,
         owner: this.owner,
@@ -93,10 +91,11 @@ class GithubHelper {
     }
   }
 
-  async addComment(comment: string): Promise<void> {
+  async addComment(token: string, comment: string): Promise<void> {
     // if we support forks, then we need to use the base, cause head will be the fork
     try {
-      await this.octokit.issues.createComment({
+      const octokit = getOctokit(token)
+      await octokit.rest.issues.createComment({
         owner: this.baseOwner,
         repo: this.baseRepoName,
         issue_number: this.issueNumber,

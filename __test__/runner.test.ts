@@ -69,7 +69,10 @@ describe('runner tests', () => {
 
     expect(mockUtils.validateEventType).toHaveBeenCalled()
     expect(mockIGithubHelper.setStatus).toHaveBeenCalledWith(params)
-    expect(mockIGithubHelper.addComment).toHaveBeenCalledWith('my comment')
+    expect(mockIGithubHelper.addComment).toHaveBeenCalledWith(
+      'bleh',
+      'my comment'
+    )
   })
 
   it('on PR run sets status and no comment', async () => {
