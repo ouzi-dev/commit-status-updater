@@ -1,3 +1,4 @@
+split-by-dot = $(word $2,$(subst ., ,$1))
 
 .PHONY: clean
 clean:
