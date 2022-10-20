@@ -102,7 +102,7 @@ class GithubHelper {
   state: ${params.status},
   target_url: ${params.url}
       `);
-                yield this.octokit.repos.createCommitStatus({
+                yield this.octokit.rest.repos.createCommitStatus({
                     context: params.name,
                     description: params.description,
                     owner: this.owner,

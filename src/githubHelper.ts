@@ -76,7 +76,7 @@ class GithubHelper {
   state: ${params.status},
   target_url: ${params.url}
       `)
-      await this.octokit.repos.createCommitStatus({
+      await this.octokit.rest.repos.createCommitStatus({
         context: params.name,
         description: params.description,
         owner: this.owner,
