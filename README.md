@@ -45,6 +45,13 @@ _These parameters are all optional and are used only for pull requests_
 | `successComment` | Default is `/hold cancel`. This is the message to add to the pull request when the status is `success`. |
 | `failComment` | Default is `/hold`. This is the message to add to the pull request when the status is `failure`, `error` or `cancelled`. |
 
+## Workflow permissions
+
+By default, if we don't add `permissions` to the workflow or the job, the action will be able to set the status commit and add comments. But if we set any permissions for the workflow/job, then we need to be sure we provide the correct ones for the action:
+
+* If we just want to set the status commit we need to be sure the job (or the whole workflow) has the permission: `statuses: write`
+* If we want to add a comment we need to be sure the job (or the whole workflow) has the permissions: `pull-requests: write`
+
 ## Examples 
 
 ### Action sets push commit to pending status
@@ -61,6 +68,25 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ouzi-dev/commit-status-updater@v1.1.0
 ```
+
+### Action sets push commit to pending status with specific permissions
+
+```
+name: Test
+
+on: [push]
+
+permissions: 
+  statuses: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ouzi-dev/commit-status-updater@v1.1.0
+```
+
 
 ### Action sets push commit to pending status with custom name
 
@@ -136,6 +162,32 @@ jobs:
 name: Test
 
 on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ouzi-dev/commit-status-updater@v1.1.0
+      with:
+        addHoldComment: "true"
+    - if: always()
+      uses: ouzi-dev/commit-status-updater@v1.1.0
+      with:
+        addHoldComment: "true"
+        status: "${{ job.status }}"
+```
+
+### Action sets pull request commit to pending status with comment, and updates check and adds comment at the end of the workflow with specific permissions
+
+```
+name: Test
+
+on: [pull_request]
+
+permissions: 
+  statuses: write
+  pull-requests: write
 
 jobs:
   build:
